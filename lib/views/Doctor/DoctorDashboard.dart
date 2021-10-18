@@ -83,7 +83,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
     SharedPreferences.getInstance().then((pref) {
       setState(() {
         doctorId = pref.getString("userId");
-        future = fetchDoctorAppointment();
+        // future = fetchDoctorAppointment();
         future2 = fetchDoctorDetails();
       });
     });
@@ -101,7 +101,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
         child: Column(
           children: [
             doctorProfile(),
-            upCommingAppointments(),
+            // upCommingAppointments(),
           ],
         ),
       ),

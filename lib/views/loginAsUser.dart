@@ -24,7 +24,6 @@ class LoginAsUser extends StatefulWidget {
 }
 
 class _LoginAsUserState extends State<LoginAsUser> {
-
   String phoneNumber = "";
   String pass = "";
   bool isPhoneNumberError = false;
@@ -33,42 +32,38 @@ class _LoginAsUserState extends State<LoginAsUser> {
   String token = "";
   FacebookLogin facebookSignIn = new FacebookLogin();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  String name, email,image = "";
+  String name, email, image = "";
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   String _message = "";
 
-  storeToken(type) async{
+  storeToken(type) async {
     dialog();
-    await FirebaseMessaging().getToken().then((value) async{
+    await FirebaseMessaging().getToken().then((value) async {
       //Toast.show(value, context, duration: 2);
       print(value);
       setState(() {
-        token =value;
+        token = value;
       });
 
-      final response = await post(
-          "$SERVER_ADDRESS/api/savetoken",
-          body: {
-            "token":token,
-            "type": "1",
-          }
-      ).catchError((e){
+      final response = await post("$SERVER_ADDRESS/api/savetoken", body: {
+        "token": token,
+        "type": "1",
+      }).catchError((e) {
         messageDialog(ERROR, UNABLE_TO_SAVE_TOKEN_TO_SERVER);
       });
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         Navigator.pop(context);
         final jsonResponse = jsonDecode(response.body);
-        if(jsonResponse['success'] == "1"){
-          SharedPreferences.getInstance().then((pref){
+        if (jsonResponse['success'] == "1") {
+          SharedPreferences.getInstance().then((pref) {
             pref.setBool("isTokenExist", true);
             print("token stored");
           });
           //Navigator.pop(context);
           loginInto(type);
         }
-      }
-      else{
+      } else {
         Navigator.pop(context);
         print("token not stored");
         messageDialog(ERROR, response.body.toString());
@@ -76,26 +71,24 @@ class _LoginAsUserState extends State<LoginAsUser> {
         //     MaterialPageRoute(builder: (context) => TabsScreen())
         // );
       }
-
-    }).catchError((e){
+    }).catchError((e) {
       Navigator.pop(context);
       print("token not accessed");
       messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
     });
     setState(() {
-      token ="";
+      token = "";
     });
   }
 
-
-
-  getToken() async{
-    await SharedPreferences.getInstance().then((pref) async{
-      if(pref.getBool("isTokenExist") ?? false) {
-        String tokenLocal = await FirebaseMessaging().getToken().catchError((e){
+  getToken() async {
+    await SharedPreferences.getInstance().then((pref) async {
+      if (pref.getBool("isTokenExist") ?? false) {
+        String tokenLocal =
+            await FirebaseMessaging().getToken().catchError((e) {
           messageDialog(ERROR, UNABLE_TO_SAVE_TOKEN_TO_SERVER);
         });
-        setState(()  {
+        setState(() {
           print("1-> token retrieved");
           token = tokenLocal;
         });
@@ -103,19 +96,17 @@ class _LoginAsUserState extends State<LoginAsUser> {
     });
   }
 
-  loginInto(int type) async{
-    if(EmailValidator.validate(phoneNumber) == false && type == 1){
+  loginInto(int type) async {
+    if (EmailValidator.validate(phoneNumber) == false && type == 1) {
       setState(() {
         isPhoneNumberError = true;
       });
-    }else if(token==null || token.isEmpty){
+    } else if (token == null || token.isEmpty) {
       storeToken(type);
-    }
-    else {
+    } else {
       dialog();
       //Toast.show("Logging in..", context, duration: 2);
-      String url =
-      type == 1
+      String url = type == 1
           ? "$SERVER_ADDRESS/api/login?email=$phoneNumber&password=$pass&login_type=$type&token=$token"
           : "$SERVER_ADDRESS/api/login?email=$email&login_type=$type&token=$token&name=$name";
       var response = await post(url).catchError((e) {
@@ -151,11 +142,10 @@ class _LoginAsUserState extends State<LoginAsUser> {
                 "profile_image", jsonResponse['register']['profile_pic']);
           });
           Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => TabsScreen())
-          );
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => TabsScreen()));
         }
-      }catch(e){
+      } catch (e) {
         Navigator.pop(context);
         messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
       }
@@ -169,6 +159,7 @@ class _LoginAsUserState extends State<LoginAsUser> {
     getToken();
   }
 
+//todo
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -178,10 +169,7 @@ class _LoginAsUserState extends State<LoginAsUser> {
             //bottom(),
             SingleChildScrollView(
               child: Column(
-                children: [
-                  header(),
-                  loginForm()
-                ],
+                children: [header(), loginForm()],
               ),
             ),
             header(),
@@ -191,10 +179,11 @@ class _LoginAsUserState extends State<LoginAsUser> {
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -203,24 +192,26 @@ class _LoginAsUserState extends State<LoginAsUser> {
           height: 60,
           child: Row(
             children: [
-              SizedBox(width: 15,),
+              SizedBox(
+                width: 15,
+              ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset("assets/moreScreenImages/back.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/back.png",
                   height: 25,
                   width: 22,
                 ),
               ),
-              SizedBox(width: 10,),
-              Text(
-                LOGIN,
-                style: Theme.of(context).textTheme.headline5.apply(
-                  color: Theme.of(context).backgroundColor,
-                  fontWeightDelta: 2
-                )
-              )
+              SizedBox(
+                width: 10,
+              ),
+              Text(LOGIN,
+                  style: Theme.of(context).textTheme.headline5.apply(
+                      color: Theme.of(context).backgroundColor,
+                      fontWeightDelta: 2))
             ],
           ),
         ),
@@ -228,7 +219,7 @@ class _LoginAsUserState extends State<LoginAsUser> {
     );
   }
 
-  Widget bottom(){
+  Widget bottom() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -236,19 +227,16 @@ class _LoginAsUserState extends State<LoginAsUser> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(DO_NOT_HAVE_AN_ACCOUNT,
-              style: Theme.of(context).textTheme.bodyText2
-            ),
+                style: Theme.of(context).textTheme.bodyText2),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RegisterAsUser())
-                );
+                    MaterialPageRoute(builder: (context) => RegisterAsUser()));
               },
               child: Text(" $REGISTER_NOW",
-                style: Theme.of(context).textTheme.bodyText1.apply(
-                  color: AMBER,
-                )
-              ),
+                  style: Theme.of(context).textTheme.bodyText1.apply(
+                        color: AMBER,
+                      )),
             ),
           ],
         ),
@@ -259,19 +247,22 @@ class _LoginAsUserState extends State<LoginAsUser> {
     );
   }
 
-  Widget loginForm(){
+  Widget loginForm() {
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).backgroundColor,
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
-      ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20))),
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Image.asset(
                 "assets/loginScreenImages/login_icon.png",
                 height: 180,
@@ -283,21 +274,21 @@ class _LoginAsUserState extends State<LoginAsUser> {
                 decoration: InputDecoration(
                     labelText: ENTER_YOUR_EMAIL,
                     labelStyle: Theme.of(context).textTheme.bodyText2.apply(
-                      fontSizeDelta: 2,
-                      color: Theme.of(context).primaryColorDark
-                    ),
-                    errorText: isPhoneNumberError ? ENTER_VALID_EMAIL_ADDRESS : null,
+                        fontSizeDelta: 2,
+                        color: Theme.of(context).primaryColorDark),
+                    errorText:
+                        isPhoneNumberError ? ENTER_VALID_EMAIL_ADDRESS : null,
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).primaryColorDark,)
-                    )
-                ),
-                style:  Theme.of(context).textTheme.bodyText2.apply(
-                  fontWeightDelta: 3,
-                  fontSizeDelta: 2,
-                ),
-                onChanged: (val){
+                        borderSide: BorderSide(
+                      color: Theme.of(context).primaryColorDark,
+                    ))),
+                style: Theme.of(context).textTheme.bodyText2.apply(
+                      fontWeightDelta: 3,
+                      fontSizeDelta: 2,
+                    ),
+                onChanged: (val) {
                   setState(() {
-                    phoneNumber =val;
+                    phoneNumber = val;
                     isPhoneNumberError = false;
                     isPasswordError = false;
                   });
@@ -311,18 +302,18 @@ class _LoginAsUserState extends State<LoginAsUser> {
                   labelText: PASSWORD,
                   labelStyle: Theme.of(context).textTheme.bodyText2.apply(
                       fontSizeDelta: 2,
-                      color: Theme.of(context).primaryColorDark
-                  ),
+                      color: Theme.of(context).primaryColorDark),
                   errorText: isPasswordError ? passErrorText : null,
                   focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark,)
-                  ),
+                      borderSide: BorderSide(
+                    color: Theme.of(context).primaryColorDark,
+                  )),
                 ),
                 style: Theme.of(context).textTheme.bodyText2.apply(
-                  fontWeightDelta: 3,
-                  fontSizeDelta: 2,
-                ),
-                onChanged: (val){
+                      fontWeightDelta: 3,
+                      fontSizeDelta: 2,
+                    ),
+                onChanged: (val) {
                   setState(() {
                     pass = val;
                     isPasswordError = false;
@@ -334,18 +325,18 @@ class _LoginAsUserState extends State<LoginAsUser> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   InkWell(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ForgetPassword("1"))
-                      );
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgetPassword("1")));
                     },
                     child: Text(
                       FORGET_PASSWORD,
                       style: TextStyle(
                           color: BLACK,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -355,57 +346,58 @@ class _LoginAsUserState extends State<LoginAsUser> {
                 height: 50,
                 //width: MediaQuery.of(context).size.width,
                 child: InkWell(
-                  onTap: (){
+                  onTap: () {
+                    print('heloo');
                     loginInto(1);
                   },
                   child: Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(25),
-                        child: Image.asset("assets/moreScreenImages/header_bg.png",
+                        child: Image.asset(
+                          "assets/moreScreenImages/header_bg.png",
                           height: 50,
                           fit: BoxFit.fill,
                           width: MediaQuery.of(context).size.width,
                         ),
                       ),
                       Center(
-                        child: Text(
-                          LOGIN,
-                          style: Theme.of(context).textTheme.bodyText1.apply(
-                            fontSizeDelta: 5,
-                            color: Theme.of(context).backgroundColor
-                          )
-                        ),
+                        child: Text(LOGIN,
+                            style: Theme.of(context).textTheme.bodyText1.apply(
+                                fontSizeDelta: 5,
+                                color: Theme.of(context).backgroundColor)),
                       )
                     ],
                   ),
                 ),
               ),
 
-              SizedBox(height: 25,),
+              SizedBox(
+                height: 25,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(DO_NOT_HAVE_AN_ACCOUNT,
-                      style: Theme.of(context).textTheme.bodyText2
-                  ),
+                      style: Theme.of(context).textTheme.bodyText2),
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RegisterAsUser())
-                      );
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterAsUser()));
                     },
                     child: Text(" $REGISTER_NOW",
                         style: Theme.of(context).textTheme.bodyText1.apply(
-                          color: AMBER,
-                        )
-                    ),
+                              color: AMBER,
+                            )),
                   ),
                 ],
               ),
 
-
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
 /*
               Row(
                 children: [
@@ -439,7 +431,9 @@ class _LoginAsUserState extends State<LoginAsUser> {
               ),
 */
 
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 5,
+              ),
 /*
               Row(
                 children: [
@@ -473,7 +467,9 @@ class _LoginAsUserState extends State<LoginAsUser> {
               ),
 */
 
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               // Platform.isIOS ? Row(
               //   children: [
               //     Expanded(
@@ -511,7 +507,6 @@ class _LoginAsUserState extends State<LoginAsUser> {
               //     )
               //   ],
               // ) : Container(),
-
             ],
           ),
         ),
@@ -519,12 +514,13 @@ class _LoginAsUserState extends State<LoginAsUser> {
     );
   }
 
-  dialog(){
+  dialog() {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(LOGGING_IN,
+            title: Text(
+              LOGGING_IN,
               style: Theme.of(context).textTheme.bodyText1,
             ),
             content: Container(
@@ -532,9 +528,12 @@ class _LoginAsUserState extends State<LoginAsUser> {
               child: Row(
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(width: 15,),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
-                    child: Text(PLEASE_WAIT_LOGGING_IN,
+                    child: Text(
+                      PLEASE_WAIT_LOGGING_IN,
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   )
@@ -542,69 +541,74 @@ class _LoginAsUserState extends State<LoginAsUser> {
               ),
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: Theme.of(context).textTheme.bodyText1),
+            title: Text(s1, style: Theme.of(context).textTheme.bodyText1),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: Theme.of(context).textTheme.bodyText1,)
+                Text(
+                  s2,
+                  style: Theme.of(context).textTheme.bodyText1,
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: (){
-                  Navigator.pop(context);
-                },
-                color: Theme.of(context).primaryColor,
-                child: Text(OK,style: Theme.of(context).textTheme.bodyText1)
-              ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  color: Theme.of(context).primaryColor,
+                  child:
+                      Text(OK, style: Theme.of(context).textTheme.bodyText1)),
             ],
           );
-        }
-    );
+        });
   }
 
-
-  errorDialog(message){
+  errorDialog(message) {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Icon(
                   Icons.error,
                   size: 80,
                   color: Colors.red,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
                   message.toString(),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ),
           );
-        }
-    );
+        });
   }
 
-  processingDialog(message){
+  processingDialog(message) {
     return showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
             title: Text(LOADING),
             content: Row(
@@ -613,15 +617,19 @@ class _LoginAsUserState extends State<LoginAsUser> {
                 CircularProgressIndicator(
                   strokeWidth: 2,
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
-                  child: Text(message,style: TextStyle(color: LIGHT_GREY_TEXT, fontSize: 14),),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: LIGHT_GREY_TEXT, fontSize: 14),
+                  ),
                 )
               ],
             ),
           );
-        }
-    );
+        });
   }
 
   // loginIntoAccount(int type) async{
@@ -662,16 +670,14 @@ class _LoginAsUserState extends State<LoginAsUser> {
   //
   // }
 
-  facebookLogin() async{
-    final FacebookLoginResult result =
-    await facebookSignIn.logIn(['email']);
+  facebookLogin() async {
+    final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
     print(result.status);
-    if(result.status == FacebookLoginStatus.loggedIn) {
+    if (result.status == FacebookLoginStatus.loggedIn) {
       final token = result.accessToken.token;
       final graphResponse = await http.get(
           'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
       final profile = jsonDecode(graphResponse.body);
-
 
       print(profile.toString());
       print(profile['email']);
@@ -708,21 +714,22 @@ class _LoginAsUserState extends State<LoginAsUser> {
               'Here\'s the error Facebook gave us: ${result.errorMessage}');
           break;
       }
-    }
-    else{
+    } else {
       print(result.errorMessage);
       errorDialog(result.errorMessage);
     }
   }
+
   //
   void _showMessage(String message) {
     setState(() {
       _message = message;
     });
   }
+
   //
-  googleLogin() async{
-    await _googleSignIn.signIn().then((value){
+  googleLogin() async {
+    await _googleSignIn.signIn().then((value) {
       print("01-> ${value.displayName}");
       setState(() {
         name = value.displayName;
@@ -730,11 +737,9 @@ class _LoginAsUserState extends State<LoginAsUser> {
         image = value.photoUrl;
       });
       loginInto(2);
-    }).catchError((e){
+    }).catchError((e) {
       print(e.toString());
       errorDialog(e.toString());
     });
   }
-
-
 }

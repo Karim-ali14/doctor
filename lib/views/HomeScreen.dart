@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         userName = pref.getString("name") ?? USER;
         userId = pref.getString("userId") ?? "";
-        loadAppointments = fetchUpcomingAppointments( );
+        // loadAppointments = fetchUpcomingAppointments( );
       });
     });
     _scrollController.addListener(() {
@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: LIGHT_GREY_SCREEN_BACKGROUND,
       body: Stack(
         children: [
-          isSearching
+          /*isSearching
              ?
       Padding(
                 padding: const EdgeInsets.fromLTRB(10, 130, 10, 0),
@@ -174,13 +174,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               )
-              : SingleChildScrollView(
+              :*/ SingleChildScrollView(
             controller: _scrollController2,
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.21,),
-                upCommingAppointments(),
-                HomeScreenNearby(_scrollController2),
+              //todo
+                // upCommingAppointments(),
+                // HomeScreenNearby(_scrollController2),
               ],
             ),
           ),

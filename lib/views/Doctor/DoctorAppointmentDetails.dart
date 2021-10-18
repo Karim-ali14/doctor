@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/modals/DoctorAppointmentDetailsClass.dart';
+import 'package:book_appointment/views/Doctor/doctor_appointment_details_row.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,32 +12,41 @@ import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DoctorAppointmentDetails extends StatefulWidget {
-
   String id;
   DoctorAppointmentDetails(this.id);
 
   @override
-  _DoctorAppointmentDetailsState createState() => _DoctorAppointmentDetailsState();
+  _DoctorAppointmentDetailsState createState() =>
+      _DoctorAppointmentDetailsState();
 }
 
 class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
-
   DoctorAppointmentDetailsClass doctorAppointmentDetailsClass;
   Future getAppointmentDetails;
   bool areChangesMade = false;
   bool isCompleteError = false;
 
-
-  fetchAppointmentDetails() async{
+  fetchAppointmentDetails() async {
     print(widget.id);
-    final response = await get("$SERVER_ADDRESS/api/appointmentdetail?id=${widget.id}&type=2");
-    if(response.statusCode == 200){
+    final response = await get(
+        "$SERVER_ADDRESS/api/appointmentdetail?id=${widget.id}&type=2");
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
+
       print(response.request);
-      print(response.body);
-      if(jsonResponse["success"] == "1"){
+//todo
+      print(response.body + '---------');
+      if (jsonResponse["success"] == "1") {
+        print('successssssss');
+        print(DoctorAppointmentDetailsClass.fromJson(jsonResponse));
+
         setState(() {
-          doctorAppointmentDetailsClass = DoctorAppointmentDetailsClass.fromJson(jsonResponse);
+          print(DoctorAppointmentDetailsClass.fromJson(jsonResponse)
+              .data
+              .toJson());
+          doctorAppointmentDetailsClass =
+              DoctorAppointmentDetailsClass.fromJson(jsonResponse);
+          print('----- $doctorAppointmentDetailsClass');
         });
       }
     }
@@ -56,45 +65,48 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
     return false;
   }
 
-
   @override
   Widget build(BuildContext context) {
+
+    // fetchAppointmentDetails();
+    // return Container();
     return SafeArea(
-        child: WillPopScope(
-          onWillPop: _willPopScope,
-          child: Scaffold(
-            backgroundColor: Theme.of(context).primaryColorLight,
-            appBar: AppBar(
-              flexibleSpace: header(),
-              leading: Container(),
-            ),
-            body: FutureBuilder(
-              future: getAppointmentDetails,
-              builder: (context, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(child: CircularProgressIndicator()));
-                }else{
-                  return Stack(
-                    children: [
-                      appointmentListWidget(doctorAppointmentDetailsClass.data),
-                      button(),
-                    ],
-                  );
-                }
-              },
-            ),
+      child: WillPopScope(
+        onWillPop: _willPopScope,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).primaryColorLight,
+          appBar: AppBar(
+            flexibleSpace: header(),
+            leading: Container(),
+          ),
+          body: FutureBuilder(
+            future: getAppointmentDetails,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: CircularProgressIndicator()));
+              } else {
+                return Stack(
+                  children: [
+                    appointmentListWidget(doctorAppointmentDetailsClass.data),
+                    button(),
+                  ],
+                );
+              }
+            },
           ),
         ),
+      ),
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -103,25 +115,29 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
           height: 60,
           child: Row(
             children: [
-              SizedBox(width: 15,),
+              SizedBox(
+                width: 15,
+              ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset("assets/moreScreenImages/back.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/back.png",
                   height: 25,
                   width: 22,
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Text(
-                  APPOINTMENT,
-                  style: TextStyle(
+                APPOINTMENT,
+                style: TextStyle(
                     color: Theme.of(context).backgroundColor,
                     fontSize: 22,
-                    fontWeight: FontWeight.bold
-                  ),
-                  //style: Theme.of(context).textTheme.headline5.apply(color: Theme.of(context).backgroundColor)
+                    fontWeight: FontWeight.bold),
+                //style: Theme.of(context).textTheme.headline5.apply(color: Theme.of(context).backgroundColor)
               )
             ],
           ),
@@ -137,9 +153,8 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
           margin: EdgeInsets.all(10),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
-            borderRadius: BorderRadius.circular(15)
-          ),
+              color: Theme.of(context).backgroundColor,
+              borderRadius: BorderRadius.circular(15)),
           child: Row(
             children: [
               ClipRRect(
@@ -151,19 +166,28 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                   placeholder: (context, url) => Container(
                     color: Theme.of(context).primaryColorLight,
                     child: Center(
-                      child: Image.asset("assets/homeScreenImages/user_unactive.png",height: 40, width: 40,),
+                      child: Image.asset(
+                        "assets/homeScreenImages/user_unactive.png",
+                        height: 40,
+                        width: 40,
+                      ),
                     ),
-
                   ),
-                  errorWidget: (context,url,err) => Container(
+                  errorWidget: (context, url, err) => Container(
                     color: Theme.of(context).primaryColorLight,
                     child: Center(
-                      child: Image.asset("assets/homeScreenImages/user_unactive.png",height: 40, width: 40,),
+                      child: Image.asset(
+                        "assets/homeScreenImages/user_unactive.png",
+                        height: 40,
+                        width: 40,
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,22 +197,24 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(list.name,
-                            style: Theme.of(context).textTheme.bodyText2.apply(
-                                fontWeightDelta: 5,
-                              fontSizeDelta: 2
-                            ),
+                          Text(
+                            list.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .apply(fontWeightDelta: 5, fontSizeDelta: 2),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Theme.of(context).primaryColorLight
-                      ),
+                          color: Theme.of(context).primaryColorLight),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -197,12 +223,19 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                             height: 13,
                             width: 13,
                           ),
-                          SizedBox(width: 5,),
-                          Text(statusToString(list.status), style: Theme.of(context).textTheme.caption.apply(
-                            fontSizeDelta: 0.5,
-                            fontWeightDelta: 2,
-                          ),),
-                          SizedBox(width: 5,),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            statusToString(int.parse(list.status)),
+                            style: Theme.of(context).textTheme.caption.apply(
+                                  fontSizeDelta: 0.5,
+                                  fontWeightDelta: 2,
+                                ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
                         ],
                       ),
                     ),
@@ -222,14 +255,22 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                     }
                   }),
 */
-              ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile();
-                },
+/*
+              SizedBox(
+                width:100 ,
+                height: 80,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile();
+                  },
+                ),
               ),
-              SizedBox(width: 10,),
+*/
+              SizedBox(
+                width: 10,
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -239,24 +280,26 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                     height: 17,
                     width: 17,
                   ),
-                  SizedBox(height: 5,),
-/*
+                  SizedBox(
+                    height: 5,
+                  ),
                   Text(
                       list.date.toString().substring(8)+"-"+list.date.toString().substring(5,7)+"-"+list.date.toString().substring(0,4),
                       style: Theme.of(context).textTheme.caption
                   ),
-*/
                   Text(list.slot,
-                      style: Theme.of(context).textTheme.bodyText1.apply(
-                          fontWeightDelta: 2
-                      )
-                  ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .apply(fontWeightDelta: 2)),
                 ],
               ),
             ],
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         Container(
           margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
           padding: EdgeInsets.all(8),
@@ -269,57 +312,71 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(PHONE_NUMBER,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                          fontWeightDelta: 1,
-                          fontSizeDelta: 1.5
-                        ),
+                      Text(
+                        PHONE_NUMBER,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .apply(fontWeightDelta: 1, fontSizeDelta: 1.5),
                       ),
-                      SizedBox(height: 5,),
-                      Text(list.phone,
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        list.phone,
                         style: Theme.of(context).textTheme.caption.apply(
-                          fontWeightDelta: 2,
-                          color: Theme.of(context).primaryColorDark.withOpacity(0.5),
-                        ),
+                              fontWeightDelta: 2,
+                              color: Theme.of(context)
+                                  .primaryColorDark
+                                  .withOpacity(0.5),
+                            ),
                       ),
                     ],
                   ),
                   InkWell(
-                    onTap: (){
-                      launch("tel:"+list.phone);
+                    onTap: () {
+                      launch("tel:" + list.phone);
                     },
                     child: Image.asset(
-                        "assets/detailScreenImages/phone_button.png",
+                      "assets/detailScreenImages/phone_button.png",
                       height: 45,
                       width: 45,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(EMAIL_ADDRESS,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                          fontWeightDelta: 1,
-                          fontSizeDelta: 1.5
-                        ),
+                      Text(
+                        EMAIL_ADDRESS,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .apply(fontWeightDelta: 1, fontSizeDelta: 1.5),
                       ),
-                      SizedBox(height: 5,),
-                      Text(list.email,
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        list.email,
                         style: Theme.of(context).textTheme.caption.apply(
-                          fontWeightDelta: 2,
-                          color: Theme.of(context).primaryColorDark.withOpacity(0.5),
-                        ),
+                              fontWeightDelta: 2,
+                              color: Theme.of(context)
+                                  .primaryColorDark
+                                  .withOpacity(0.5),
+                            ),
                       ),
                     ],
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       print("pressed");
                       launch(Uri(
                         scheme: 'mailto',
@@ -330,54 +387,50 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                       ).toString());
                     },
                     child: Image.asset(
-                        "assets/detailScreenImages/email_btn.png",
+                      "assets/detailScreenImages/email_btn.png",
                       height: 45,
                       width: 45,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(DESCRIPTION,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                          fontWeightDelta: 1,
-                          fontSizeDelta: 1.5
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Container(
-                        width: 300,
-                        child: Text(list.description,
-                          style: Theme.of(context).textTheme.caption.apply(
-                            fontWeightDelta: 2,
-                            color: Theme.of(context).primaryColorDark.withOpacity(0.5),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              SizedBox(
+                height: 15,
               ),
+              DoctorAppointmentDetailsRow(
+                title: 'Description',
+                data: list.description,
+              ),
+/*
+              DoctorAppointmentDetailsRow(
+                title: 'Date',
+
+                data: list.date,
+              ),
+              DoctorAppointmentDetailsRow(
+                title: 'Time',
+
+                data: list.slot,
+              ),
+*/
+
             ],
           ),
         ),
-        Expanded(child:
-        Container(
+        Expanded(
+            child: Container(
           margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          color: WHITE,)),
-        SizedBox(height: 150,),
+          color: WHITE,
+        )),
+        SizedBox(
+          height: 150,
+        ),
       ],
     );
   }
 
   String statusToString(int status) {
-    switch (status){
+    switch (status) {
       case 0:
         return ABSENT;
       case 1:
@@ -391,169 +444,180 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
       case 5:
         return REJECTED;
     }
-
   }
 
-
-
-  Widget button(){
+  Widget button() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: doctorAppointmentDetailsClass.data.status == 1
           ? Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            height: 50,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
-            child: InkWell(
-              onTap: (){
-                changeStatus("3");
-              },
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: Image.asset("assets/moreScreenImages/header_bg.png",
-                      height: 50,
-                      fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      ACCEPT,
-                      style: Theme.of(context).textTheme.bodyText1.apply(
-                        color: Theme.of(context).backgroundColor,
-                        fontSizeDelta: 2
-                      )
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 10,),
-          Container(
-            height: 50,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: InkWell(
-              onTap: (){
-                changeStatus("5");
-              },
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: Image.asset("assets/moreScreenImages/header_bg.png",
-                      height: 50,
-                      fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                        CANCEL,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                          color: Theme.of(context).backgroundColor,
-                          fontSizeDelta: 2
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                  child: InkWell(
+                    onTap: () {
+                      changeStatus("3");
+                    },
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: Image.asset(
+                            "assets/moreScreenImages/header_bg.png",
+                            height: 50,
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ),
+                        Center(
+                          child: Text(ACCEPT,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .apply(
+                                      color: Theme.of(context).backgroundColor,
+                                      fontSizeDelta: 2)),
                         )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      )
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: InkWell(
+                    onTap: () {
+                      changeStatus("5");
+                    },
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: Image.asset(
+                            "assets/moreScreenImages/header_bg.png",
+                            height: 50,
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ),
+                        Center(
+                          child: Text(CANCEL,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .apply(
+                                      color: Theme.of(context).backgroundColor,
+                                      fontSizeDelta: 2)),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
           : doctorAppointmentDetailsClass.data.status == 3
               ? Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            height: 50,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
-            child: InkWell(
-              onTap: (){
-                if(doctorAppointmentDetailsClass.data.date == DateTime.now().toString().substring(0,10)){
-                  print("yes");
-                  changeStatus("4");
-                }else{
-                  print("no");
-                  setState(() {
-                    isCompleteError = true;
-                  });
-                  messageDialog(ERROR, "Appointment is on ${doctorAppointmentDetailsClass.data.date}. You can't mark it as Completed today");
-                }
-                // print(doctorAppointmentDetailsClass.data.date);
-                // print(DateTime.now().toString().substring(0,10));
-                //changeStatus("4");
-              },
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: Image.asset("assets/moreScreenImages/header_bg.png",
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
                       height: 50,
-                      fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                      child: InkWell(
+                        onTap: () {
+                          if (doctorAppointmentDetailsClass.data.date ==
+                              DateTime.now().toString().substring(0, 10)) {
+                            print("yes");
+                            changeStatus("4");
+                          } else {
+                            print("no");
+                            setState(() {
+                              isCompleteError = true;
+                            });
+                            messageDialog(ERROR,
+                                "Appointment is on ${doctorAppointmentDetailsClass.data.date}. You can't mark it as Completed today");
+                          }
+                          // print(doctorAppointmentDetailsClass.data.date);
+                          // print(DateTime.now().toString().substring(0,10));
+                          //changeStatus("4");
+                        },
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: Image.asset(
+                                "assets/moreScreenImages/header_bg.png",
+                                height: 50,
+                                fit: BoxFit.fill,
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                            ),
+                            Center(
+                              child: Text(COMPLETE,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .apply(
+                                          color:
+                                              Theme.of(context).backgroundColor,
+                                          fontSizeDelta: 2)),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                        COMPLETE,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                            color: Theme.of(context).backgroundColor,
-                            fontSizeDelta: 2
-                        )
+                    SizedBox(
+                      height: 10,
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 10,),
-          Container(
-            height: 50,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: InkWell(
-              onTap: (){
-                changeStatus("0");
-              },
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: Image.asset("assets/moreScreenImages/header_bg.png",
+                    Container(
                       height: 50,
-                      fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: InkWell(
+                        onTap: () {
+                          changeStatus("0");
+                        },
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: Image.asset(
+                                "assets/moreScreenImages/header_bg.png",
+                                height: 50,
+                                fit: BoxFit.fill,
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                            ),
+                            Center(
+                              child: Text(ABSENT,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .apply(
+                                          color:
+                                              Theme.of(context).backgroundColor,
+                                          fontSizeDelta: 2)),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                        ABSENT,
-                        style: Theme.of(context).textTheme.bodyText1.apply(
-                            color: Theme.of(context).backgroundColor,
-                            fontSizeDelta: 2
-                        )
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ) : Container(),
+                  ],
+                )
+              : Container(),
     );
   }
 
-  changeStatus(status) async{
+  changeStatus(status) async {
     dialog();
-    final response = await post("$SERVER_ADDRESS/api/appointmentstatuschange?app_id=${widget.id}&status=$status");
-    if(response.statusCode == 200){
+    final response = await post(
+        "$SERVER_ADDRESS/api/appointmentstatuschange?app_id=${widget.id}&status=$status");
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      if(jsonResponse['success'] == "1"){
+      if (jsonResponse['success'] == "1") {
         Navigator.pop(context);
         //messageDialog(SUCCESSFUL, jsonResponse['msg']);
         setState(() {
@@ -564,13 +628,13 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
     }
   }
 
-
-  dialog(){
+  dialog() {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(PROCESSING,
+            title: Text(
+              PROCESSING,
               style: GoogleFonts.poppins(),
             ),
             content: Container(
@@ -578,63 +642,68 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
               child: Row(
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(width: 15,),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
-                    child: Text(PLEASE_WAIT_WHILE_PROCESSING,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12
-                      ),
+                    child: Text(
+                      PLEASE_WAIT_WHILE_PROCESSING,
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
                   )
                 ],
               ),
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-            ),),
+            title: Text(
+              s1,
+              style: GoogleFonts.comfortaa(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),)
+                Text(
+                  s2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: (){
-                  if(isCompleteError){
+                onPressed: () {
+                  if (isCompleteError) {
                     Navigator.pop(context);
-                  }else {
+                  } else {
                     setState(() {
                       getAppointmentDetails = fetchAppointmentDetails();
                     });
                   }
                 },
                 color: Theme.of(context).primaryColor,
-                child: Text(OK,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color: BLACK,
-                ),),
+                child: Text(
+                  OK,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: BLACK,
+                  ),
+                ),
               ),
             ],
           );
-        }
-    );
+        });
   }
-
 }
-
-

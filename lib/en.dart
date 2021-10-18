@@ -2,7 +2,7 @@
 //Homescreen text
 
 const String WELCOME = "Welcome";
-const String USER = "User";
+const String USER = "Doctor";
 const String HOME = "Home";
 const String RETRY = "Retry";
 const String SEE_ALL = "see all";

@@ -156,6 +156,7 @@ class _DoctorPastAppointmentsState extends State<DoctorPastAppointments> {
                 );
 
               }else if(snapshot.connectionState == ConnectionState.done && isAppointmentAvailable){
+
                 return ListView.builder(
                   itemCount: nextUrl != "null" ? list.length + 1 : list.length,
                   shrinkWrap: true,
@@ -216,7 +217,8 @@ class _DoctorPastAppointmentsState extends State<DoctorPastAppointments> {
     );
   }
 
-  Widget appointmentListWidget(int index, List<dynamic> list) {
+  Widget appointmentListWidget(int index, List<DoctorAppointmentData> list) {
+    print(list.length);
     return InkWell(
       borderRadius: BorderRadius.circular(15),
       onTap: (){

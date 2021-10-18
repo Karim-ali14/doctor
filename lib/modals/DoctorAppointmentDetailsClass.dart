@@ -25,7 +25,7 @@ class DoctorAppointmentDetailsClass {
 class Data {
   String image;
   String name;
-  int status;
+  String status;
   String date;
   String slot;
   String phone;

@@ -29,8 +29,8 @@ class DoctorScheduleDetails {
 
 class Data {
   int id;
-  int doctorId;
-  int dayId;
+  String doctorId;
+  String dayId;
   String startTime;
   String endTime;
   String duration;
@@ -85,7 +85,7 @@ class Data {
 
 class Getslotls {
   int id;
-  int scheduleId;
+  String scheduleId;
   String slot;
   String createdAt;
   String updatedAt;

@@ -15,7 +15,8 @@ import 'package:book_appointment/CustomAds.dart';
 
 import 'en.dart';
 
-const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
+// const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
+const String SERVER_ADDRESS = "http://doctor.drayman.co";
 
 const LANGUAGE = "en";
 int PHONE_NUMBER_LENGTH = 10;
@@ -126,7 +127,7 @@ class _TabsScreenState extends State<TabsScreen> {
   List<Widget> screens = [
     HomeScreen(),
     UserPastAppointments(),
-    LoginAsDoctor(),
+    // LoginAsDoctor(),
     MoreScreen()
   ];
 
@@ -178,6 +179,7 @@ class _TabsScreenState extends State<TabsScreen> {
                 label: APPOINTMENT,
               ),
 
+/*
               BottomNavigationBarItem(
                 icon: Image.asset(
                   index==2
@@ -189,6 +191,7 @@ class _TabsScreenState extends State<TabsScreen> {
                 ),
                 label: DOCTOR_LOGIN,
               ),
+*/
 
               BottomNavigationBarItem(
                 icon: Image.asset(

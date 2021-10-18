@@ -1,5 +1,6 @@
 import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
+import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
 import 'package:book_appointment/views/HelpCenter.dart';
 import 'package:book_appointment/views/ReportIssuesScreen.dart';
 import 'package:book_appointment/views/SpecialityScreen.dart';
@@ -173,7 +174,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   onTap: (){
                     if(!isLoggedIn){
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginAsUser())
+                        MaterialPageRoute(builder: (context) => LoginAsDoctor())
                       );
                     }
                   },

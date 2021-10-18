@@ -368,19 +368,19 @@ class _UserAppointmentDetailsState extends State<UserAppointmentDetails> {
     );
   }
 
-  String statusToString(int status) {
+  String statusToString(String status) {
     switch (status){
-      case 0:
+      case '0':
         return ABSENT;
-      case 1:
+      case '1':
         return RECEIVED;
-      case 2:
+      case '2':
         return APPROVED;
-      case 3:
+      case '3':
         return IN_PROCESS;
-      case 4:
+      case '4':
         return COMPLETED;
-      case 5:
+      case '5':
         return REJECTED;
     }
 

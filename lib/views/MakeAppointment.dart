@@ -27,7 +27,6 @@ class MakeAppointment extends StatefulWidget {
 }
 
 class _MakeAppointmentState extends State<MakeAppointment> {
-
   DateTime dateTime = DateTime.now();
   MakeAppointmentClass makeAppointmentClass;
   bool isLoading = true;
@@ -86,20 +85,19 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     super.initState();
     initialize();
     setState(() {
-      date = dateTime.toString().substring(0,10);
+      date = dateTime.toString().substring(0, 10);
     });
   }
 
-  initialize(){
-
-    for(int i=0; i<30; i++){
+  initialize() {
+    for (int i = 0; i < 30; i++) {
       isSelected.add(false);
     }
     setState(() {
-      isSelected[0]=true;
+      isSelected[0] = true;
     });
-    getSlots(dateTime.toString().substring(0,10));
-    SharedPreferences.getInstance().then((pref){
+    getSlots(dateTime.toString().substring(0, 10));
+    SharedPreferences.getInstance().then((pref) {
       setState(() {
         textEditingController.text = pref.getString("phone");
         userId = pref.getString("userId");
@@ -108,7 +106,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     });
   }
 
-  getSlots(String dateinside) async{
+  getSlots(String dateinside) async {
     setState(() {
       selectedSlot.clear();
       isLoading = true;
@@ -119,13 +117,14 @@ class _MakeAppointmentState extends State<MakeAppointment> {
       previousSelectedTimingSlot = 0;
     });
 
-    final response = await get("$SERVER_ADDRESS/api/getslot?doctor_id=${widget.id}&date=$dateinside");
-    if(response.statusCode == 200){
+    final response = await get(
+        "$SERVER_ADDRESS/api/getslot?doctor_id=${widget.id}&date=$dateinside");
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       print(jsonResponse);
       makeAppointmentClass = MakeAppointmentClass.fromJson(jsonResponse);
-      if(makeAppointmentClass.success == "1"){
-        for(int i=0; i<makeAppointmentClass.data.length; i++){
+      if (makeAppointmentClass.success == "1") {
+        for (int i = 0; i < makeAppointmentClass.data.length; i++) {
           setState(() {
             selectedSlot.add(false);
           });
@@ -136,7 +135,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           selectedSlot[0] = true;
           previousSelectedSlot = 0;
         });
-      }else{
+      } else {
         setState(() {
           isNoSlot = true;
           isLoading = false;
@@ -145,11 +144,11 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     }
   }
 
-  initializeTimeSlots(int index){
+  initializeTimeSlots(int index) {
     setState(() {
       selectedTimingSlot.clear();
     });
-    for(int i=0; i<makeAppointmentClass.data[index].slottime.length; i++){
+    for (int i = 0; i < makeAppointmentClass.data[index].slottime.length; i++) {
       setState(() {
         selectedTimingSlot.add(false);
       });
@@ -177,22 +176,27 @@ class _MakeAppointmentState extends State<MakeAppointment> {
                     header(),
                     dayDateList(),
                     !isLoading
-                        ? isNoSlot ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          NO_SLOT_AVAILABLE,
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              color: LIGHT_GREY_TEXT,
-                              fontSize: 15
+                        ? isNoSlot
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(
+                                    NO_SLOT_AVAILABLE,
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        color: LIGHT_GREY_TEXT,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                              )
+                            : slotsList()
+                        : Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        ),
-                      ),
-                    ) : slotsList()
-                        : Center(child: CircularProgressIndicator(),),
                     //!isLoading ? timingSlotsList() : Container(),
-                    SizedBox(height: 80,),
+                    SizedBox(
+                      height: 80,
+                    ),
                   ],
                 ),
               ),
@@ -204,10 +208,11 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -216,24 +221,26 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           height: 60,
           child: Row(
             children: [
-              SizedBox(width: 15,),
+              SizedBox(
+                width: 15,
+              ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset("assets/moreScreenImages/back.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/back.png",
                   height: 25,
                   width: 22,
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Text(
                 widget.name,
                 style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    color: WHITE,
-                    fontSize: 22
-                ),
+                    fontWeight: FontWeight.w600, color: WHITE, fontSize: 22),
               ),
             ],
           ),
@@ -242,15 +249,15 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-  Widget dayDateList(){
+  Widget dayDateList() {
     return Container(
       height: 130,
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ListView.builder(
-        shrinkWrap: true,
+          shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: 30,
-          itemBuilder: (context, index){
+          itemBuilder: (context, index) {
             return dayDateCard(index);
           }),
     );
@@ -258,15 +265,15 @@ class _MakeAppointmentState extends State<MakeAppointment> {
 
   Widget dayDateCard(int i) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         setState(() {
           // selectedSlot[previousSelectedSlot] = false;
           isSelected[previousSelectedIndex] = false;
           isSelected[i] = !isSelected[i];
           previousSelectedIndex = i;
-          date = dateTime.add(Duration(days: i)).toString().substring(0,10);
+          date = dateTime.add(Duration(days: i)).toString().substring(0, 10);
           print(date);
-          getSlots(dateTime.add(Duration(days: i)).toString().substring(0,10));
+          getSlots(dateTime.add(Duration(days: i)).toString().substring(0, 10));
         });
       },
       borderRadius: BorderRadius.circular(20),
@@ -275,27 +282,25 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         margin: EdgeInsets.fromLTRB(8, 10, 8, 10),
         decoration: BoxDecoration(
             color: isSelected[i] ? AMBER : WHITE,
-            borderRadius: BorderRadius.circular(15)
-        ),
+            borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(days[dateTime.add(Duration(days: i)).weekday],
+            Text(
+              days[dateTime.add(Duration(days: i)).weekday],
               //days[dateTime.weekday+i < 6 ? dateTime.weekday : i],
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: isSelected[i] ? WHITE : BLACK,
-                  fontSize: 10
-              ),
+                  fontSize: 10),
             ),
             Text(
               dateTime.add(Duration(days: i)).day.toString(),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: isSelected[i] ? WHITE : LIGHT_GREY_TEXT,
-                  fontSize: 20
-              ),
+                  fontSize: 20),
             ),
             Container(
               width: 50,
@@ -305,12 +310,13 @@ class _MakeAppointmentState extends State<MakeAppointment> {
               ),
             ),
             Text(
-              months[dateTime.add(Duration(days: i)).month - 1].toString()+", "+dateTime.add(Duration(days: i)).year.toString(),
+              months[dateTime.add(Duration(days: i)).month - 1].toString() +
+                  ", " +
+                  dateTime.add(Duration(days: i)).year.toString(),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: isSelected[i] ? WHITE : LIGHT_GREY_TEXT,
-                  fontSize: 10
-              ),
+                  fontSize: 10),
             ),
           ],
         ),
@@ -318,8 +324,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-
-  Widget slotsList(){
+  Widget slotsList() {
     return Column(
       children: [
         Container(
@@ -329,7 +334,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: makeAppointmentClass.data.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, index) {
                 return slots(index);
               }),
         ),
@@ -341,7 +346,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
 
   Widget slots(int i) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         setState(() {
           selectedSlot[previousSelectedSlot] = false;
           selectedSlot[i] = !selectedSlot[i];
@@ -356,13 +361,14 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         margin: EdgeInsets.fromLTRB(8, 10, 8, 10),
         decoration: BoxDecoration(
             color: selectedSlot[i] ? AMBER : WHITE,
-            borderRadius: BorderRadius.circular(15)
-        ),
+            borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Container(
               height: 45,
               width: 45,
@@ -373,28 +379,32 @@ class _MakeAppointmentState extends State<MakeAppointment> {
               ),
               child: Center(
                 child: Image.asset(
-                    selectedSlot[i]
-                        ? "assets/makeAppointmentScreenImages/day_active.png"
-                        : "assets/makeAppointmentScreenImages/day_unactive.png",
+                  selectedSlot[i]
+                      ? "assets/makeAppointmentScreenImages/day_active.png"
+                      : "assets/makeAppointmentScreenImages/day_unactive.png",
                 ),
               ),
             ),
-            SizedBox(width: 10,),
-            Text(makeAppointmentClass.data[i].title,
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              makeAppointmentClass.data[i].title,
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: selectedSlot[i] ? WHITE : BLACK,
-                  fontSize: 14
-              ),
+                  fontSize: 14),
             ),
-            SizedBox(width: 15,),
+            SizedBox(
+              width: 15,
+            ),
           ],
         ),
       ),
     );
   }
-  
-  Widget timingSlotsList(int index){
+
+  Widget timingSlotsList(int index) {
     print(index);
     return GridView.count(
       crossAxisCount: 3,
@@ -404,22 +414,31 @@ class _MakeAppointmentState extends State<MakeAppointment> {
       mainAxisSpacing: 5,
       childAspectRatio: 1.8,
       physics: ClampingScrollPhysics(),
-      children: List.generate(makeAppointmentClass.data[index].slottime.length, (ind) => timingSlotsCard(ind, makeAppointmentClass.data[index].slottime)),
+      children: List.generate(
+          makeAppointmentClass.data[index].slottime.length,
+          (ind) =>
+              timingSlotsCard(ind, makeAppointmentClass.data[index].slottime)),
     );
   }
 
-  Widget timingSlotsCard(int i,List<Slottime> list) {
+  Widget timingSlotsCard(int i, List<Slottime> list) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         setState(() {
           print(list[i].id);
-          if(list[i].isBook == "1"){
+          if (list[i].isBook == "1") {
             Toast.show(NO_SLOT_AVAILABLE, context, duration: 2);
-          }else {
+          } else {
             slotId = list[i].id.toString();
             slotName = list[i].name;
-            print("previousSelectedTimingSlot : " + (previousSelectedTimingSlot > list.length ? 0 : previousSelectedTimingSlot).toString());
-            selectedTimingSlot[previousSelectedTimingSlot > list.length ? 0 : previousSelectedTimingSlot] = false;
+            print("previousSelectedTimingSlot : " +
+                (previousSelectedTimingSlot > list.length
+                        ? 0
+                        : previousSelectedTimingSlot)
+                    .toString());
+            selectedTimingSlot[previousSelectedTimingSlot > list.length
+                ? 0
+                : previousSelectedTimingSlot] = false;
             selectedTimingSlot[i] = !selectedTimingSlot[i];
             previousSelectedTimingSlot = i;
           }
@@ -430,9 +449,12 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         height: 90,
         margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
         decoration: BoxDecoration(
-            color: list[i].isBook == "1" ? Colors.grey.withOpacity(0.1) : selectedTimingSlot[i] ? AMBER: WHITE,
-            borderRadius: BorderRadius.circular(15)
-        ),
+            color: list[i].isBook == "1"
+                ? Colors.grey.withOpacity(0.1)
+                : selectedTimingSlot[i]
+                    ? AMBER
+                    : WHITE,
+            borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -441,20 +463,24 @@ class _MakeAppointmentState extends State<MakeAppointment> {
               list[i].isBook == "1"
                   ? "assets/makeAppointmentScreenImages/time_unactive.png"
                   : selectedTimingSlot[i]
-                    ? "assets/makeAppointmentScreenImages/time_active.png"
-                    : "assets/makeAppointmentScreenImages/time_unactive.png",
+                      ? "assets/makeAppointmentScreenImages/time_active.png"
+                      : "assets/makeAppointmentScreenImages/time_unactive.png",
               height: 15,
               width: 15,
             ),
-            SizedBox(width: 10,),
-            Text(list[i].name,
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              list[i].name,
               style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color:
-                  list[i].isBook == "0"
-                      ? selectedTimingSlot[i] ? WHITE : BLACK
-                      : Colors.grey.withOpacity(0.5),
-                  fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: list[i].isBook == "0"
+                    ? selectedTimingSlot[i]
+                        ? WHITE
+                        : BLACK
+                    : Colors.grey.withOpacity(0.5),
+                fontSize: 12,
               ),
             ),
           ],
@@ -463,7 +489,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-  fillUpForm(){
+  fillUpForm() {
     return Container(
       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Column(
@@ -471,7 +497,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           TextField(
             keyboardType: TextInputType.phone,
             controller: textEditingController,
-            onChanged: (val){
+            onChanged: (val) {
               setState(() {
                 isPhoneError = false;
               });
@@ -479,41 +505,41 @@ class _MakeAppointmentState extends State<MakeAppointment> {
             decoration: InputDecoration(
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               labelText: PHONE_NUMBER,
               errorText: isPhoneError ? ENTER_VALID_MOBILE_NUMBER : null,
               labelStyle: Theme.of(context).textTheme.bodyText2.apply(
-                fontSizeDelta: 3,
-                fontWeightDelta: 2,
-                color: Theme.of(context).primaryColorDark
-              ),
+                  fontSizeDelta: 3,
+                  fontWeightDelta: 2,
+                  color: Theme.of(context).primaryColorDark),
             ),
             style: Theme.of(context).textTheme.bodyText1.apply(
-                fontSizeDelta: 3,
-                //color: Theme.of(context).primaryColorDark
-            ),
+                  fontSizeDelta: 3,
+                  //color: Theme.of(context).primaryColorDark
+                ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           TextField(
             decoration: InputDecoration(
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               labelText: DESCRIPTION,
               errorText: isDescriptionEmpty ? THIS_FIELD_IS_REQUIRED : null,
               labelStyle: Theme.of(context).textTheme.bodyText2.apply(
-                fontSizeDelta: 3,
-                fontWeightDelta: 2,
-                color: Theme.of(context).primaryColorDark
-              ),
+                  fontSizeDelta: 3,
+                  fontWeightDelta: 2,
+                  color: Theme.of(context).primaryColorDark),
             ),
             style: Theme.of(context).textTheme.bodyText1.apply(
-                fontSizeDelta: 3,
-                //color: Theme.of(context).primaryColorDark
-            ),
-            onChanged: (val){
+                  fontSizeDelta: 3,
+                  //color: Theme.of(context).primaryColorDark
+                ),
+            onChanged: (val) {
               setState(() {
                 isDescriptionEmpty = false;
                 description = val;
@@ -525,7 +551,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-  Widget button(){
+  Widget button() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -533,7 +559,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 20),
         //width: MediaQuery.of(context).size.width,
         child: InkWell(
-          onTap: (){
+          onTap: () {
             //print(date);
             //bookAppointment();
             processPayment();
@@ -542,7 +568,8 @@ class _MakeAppointmentState extends State<MakeAppointment> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: Image.asset("assets/moreScreenImages/header_bg.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/header_bg.png",
                   height: 50,
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width,
@@ -552,10 +579,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
                 child: Text(
                   MAKE_AN_APPOINTMENT,
                   style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: WHITE,
-                      fontSize: 18
-                  ),
+                      fontWeight: FontWeight.w500, color: WHITE, fontSize: 18),
                 ),
               )
             ],
@@ -565,20 +589,23 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     );
   }
 
-  processPayment() async{
+  processPayment() async {
     //print("Fee : ${int.parse(widget.consultationFee)}");
-    if(textEditingController.text == null || textEditingController.text.isEmpty || textEditingController.text.length < PHONE_NUMBER_LENGTH){
+    if (textEditingController.text == null ||
+        textEditingController.text.isEmpty ||
+        textEditingController.text.length < PHONE_NUMBER_LENGTH) {
       setState(() {
         isPhoneError = true;
       });
-    }else if(slotId == null || slotId.length == 0){
+    } else if (slotId == null || slotId.length == 0) {
       messageDialog(ERROR, PLEASE_SELECT_APPOINTMENT_TIME);
-    } else if(description.isEmpty){
+    } else if (description.isEmpty) {
       setState(() {
         isDescriptionEmpty = true;
-        scrollController.animateTo(400,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
       });
-    }else {
+    } else {
       print('heloo');
       bottomSheet();
       // messageDialogPayment(PROCESS_PAYMENT,
@@ -588,57 +615,56 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     }
   }
 
-  bookAppointment({String nonce, String type}) async{
-      dialog();
-      print("user_id : " + userId +
-          "\ndoctor_id : " + doctorId);
-      String url = "$SERVER_ADDRESS/api/bookappointment";
-      final body ={
-        "user_id": userId,
-        "doctor_id": doctorId,
-        "date": date,
-        "slot_timing_id": slotId,
-        "slot_id": slotId,
-        "slot_name": slotName,
-        "consultation_fees" : widget.consultationFee,
-        "payment_method_nonce" : type == "1" ? (nonce ?? "") : "",
-        "stripeToken" : type == "2" ? (nonce ?? "") : "",
-        "payment_type" : type,
-        "phone": textEditingController.text,
-        "user_description": description,
-      };
-      print(body);
-      print('helooo');
-      final response = await post(url, body:body );
+  bookAppointment({String nonce, String type}) async {
+    dialog();
+    print("user_id : " + userId + "\ndoctor_id : " + doctorId);
+    String url = "$SERVER_ADDRESS/api/bookappointment";
+    final body = {
+      "user_id": userId,
+      "doctor_id": doctorId,
+      "date": date,
+      "slot_timing_id": slotId,
+      "slot_id": slotId,
+      "slot_name": slotName,
+      "consultation_fees": widget.consultationFee,
+      "payment_method_nonce": type == "1" ? (nonce ?? "") : "",
+      "stripeToken": type == "2" ? (nonce ?? "") : "",
+      "payment_type": type,
+      "phone": textEditingController.text,
+      "user_description": description,
+    };
+    print(body);
+    print('helooo');
+    final response = await post(url, body: body);
 
-      print(response.body);
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
 
+      print(jsonResponse);
+      if (jsonResponse["success"] == "1") {
+        Navigator.pop(context);
+        setState(() {
+          isAppointmentMadeSuccessfully = true;
+          AppointmentId = jsonResponse['data'].toString();
+        });
+        messageDialog(SUCCESSFUL, APPOINTMENT_MADE_SUCCESSFULLY);
         print(jsonResponse);
-        if (jsonResponse["success"] == "1") {
-          Navigator.pop(context);
-          setState(() {
-            isAppointmentMadeSuccessfully = true;
-            AppointmentId = jsonResponse['data'].toString();
-          });
-          messageDialog(SUCCESSFUL, APPOINTMENT_MADE_SUCCESSFULLY);
-          print(jsonResponse);
-        } else {
-          Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
 
-          messageDialog(ERROR, jsonResponse['register']);
-        }
+        messageDialog(ERROR, jsonResponse['register']);
       }
-
+    }
   }
 
-  dialog(){
+  dialog() {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(PROCESSING,
+            title: Text(
+              PROCESSING,
               style: GoogleFonts.poppins(),
             ),
             content: Container(
@@ -646,286 +672,335 @@ class _MakeAppointmentState extends State<MakeAppointment> {
               child: Row(
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(width: 15,),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
-                    child: Text(PLEASE_WAIT_WHILE_MAKING_APPOINTMENT,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12
-                      ),
+                    child: Text(
+                      PLEASE_WAIT_WHILE_MAKING_APPOINTMENT,
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
                   )
                 ],
               ),
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-            ),),
+            title: Text(
+              s1,
+              style: GoogleFonts.comfortaa(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),)
+                Text(
+                  s2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: () async{
-                  if(isAppointmentMadeSuccessfully){
+                onPressed: () async {
+                  if (isAppointmentMadeSuccessfully) {
                     Navigator.popUntil(context, (route) => route.isFirst);
-                    Navigator.pushReplacement(context, MaterialPageRoute(
-                      builder: (context) => TabsScreen(),
-                    ));
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => UserAppointmentDetails(AppointmentId),
-                    ));
-                  }else{
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TabsScreen(),
+                        ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              UserAppointmentDetails(AppointmentId),
+                        ));
+                  } else {
                     Navigator.pop(context);
                   }
                 },
                 color: Theme.of(context).primaryColor,
-                child: Text(OK,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color: BLACK,
-                ),),
+                child: Text(
+                  OK,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: BLACK,
+                  ),
+                ),
               ),
             ],
           );
-        }
-    );
+        });
   }
 
-  messageDialogPayment(String s1, String s2){
+  messageDialogPayment(String s1, String s2) {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1, style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold
-            ),),
+            title: Text(
+              s1,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: Theme.of(context).textTheme.bodyText1,)
+                Text(
+                  s2,
+                  style: Theme.of(context).textTheme.bodyText1,
+                )
               ],
             ),
             actions: [
               FlatButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     Navigator.pop(context);
                   },
                   color: WHITE,
-                  child: Text(WAIT,style: Theme.of(context).textTheme.bodyText1)
-              ),
+                  child:
+                      Text(WAIT, style: Theme.of(context).textTheme.bodyText1)),
               FlatButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     Navigator.pop(context);
-
                   },
                   color: Theme.of(context).primaryColor,
-                  child: Text(YES,style: Theme.of(context).textTheme.bodyText1)
-              ),
+                  child:
+                      Text(YES, style: Theme.of(context).textTheme.bodyText1)),
             ],
           );
-        }
-    );
+        });
   }
 
   int selectedPaymentMethod = 2;
 
-  bottomSheet(){
+  bottomSheet() {
     return showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      backgroundColor: Colors.transparent,
-      builder: (context){
-        return StatefulBuilder(
-            builder: (context, setState){
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: WHITE,
-                        borderRadius: BorderRadius.circular(15)
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 15,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  widget.name + "'s " + CONSULTATION_FEE,
-                                  style: TextStyle(
-                                      color: BLACK,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: WHITE, borderRadius: BorderRadius.circular(15)),
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.name + "'s " + CONSULTATION_FEE,
+                                style: TextStyle(
+                                    color: BLACK,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(width: 20,),
-                              Text(
-                                CURRENCY.trim() + (widget.consultationFee ?? "0"),
-                                style: GoogleFonts.ubuntu(
-                                    color: AMBER,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold
-                                ),
-                              )
-
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              CURRENCY.trim() + (widget.consultationFee ?? "0"),
+                              style: GoogleFonts.ubuntu(
+                                  color: AMBER,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
-                        SizedBox(height: 5,),
-                        Divider(
-                          color: Colors.grey,
-                          thickness: 0.7,
-                        ),
-                        SizedBox(height: 5,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            SELECT_A_PAYMENT_METHOD.toUpperCase(),
-                            style: TextStyle(
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Divider(
+                        color: Colors.grey,
+                        thickness: 0.7,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          SELECT_A_PAYMENT_METHOD.toUpperCase(),
+                          style: TextStyle(
                               color: LIGHT_GREY_TEXT,
                               fontSize: 12,
-                              fontWeight: FontWeight.bold
-                            ),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      paymentMethodCardTile(
+                          title: CASH_ON_BOARD,
+                          explanation: PAY_ON_VISTING_DOCTOR,
+                          index: 2,
+                          setState: setState),
+/*
+                      Divider(
+                        color: Colors.grey,
+                        thickness: 0.7,
+                      ),
+                      paymentMethodCardTile(
+                          title: BRAINTREE,
+                          explanation: BRAINTREE_EXPLANATION,
+                          index: 0,
+                          setState: setState),
+                      Divider(
+                        color: Colors.grey,
+                        thickness: 0.7,
+                      ),
+                      paymentMethodCardTile(
+                          title: STRIPE,
+                          explanation: STRIPE_EXPLANATION,
+                          index: 1,
+                          setState: setState),
+*/
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                  //width: MediaQuery.of(context).size.width,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (selectedPaymentMethod == 0) {
+                        processBrainTreePaymentAndBookAppointment();
+                      } else if (selectedPaymentMethod == 1) {
+                        processStripePaymentAndBookAppointment();
+                      } else {
+                        bookAppointment(type: "cod");
+                      }
+                    },
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: Image.asset(
+                            "assets/moreScreenImages/header_bg.png",
+                            height: 50,
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width,
                           ),
                         ),
-                        SizedBox(height: 5,),
-                        paymentMethodCardTile(title: CASH_ON_BOARD, explanation: PAY_ON_VISTING_DOCTOR, index: 2, setState: setState),
-                        Divider(
-                          color: Colors.grey,
-                          thickness: 0.7,
-                        ),
-                        paymentMethodCardTile(title: BRAINTREE, explanation: BRAINTREE_EXPLANATION, index: 0, setState: setState),
-                        Divider(
-                          color: Colors.grey,
-                          thickness: 0.7,
-                        ),
-                        paymentMethodCardTile(title: STRIPE, explanation: STRIPE_EXPLANATION, index: 1, setState: setState),
-
-                        SizedBox(height: 10,),
+                        Center(
+                          child: Text(
+                            selectedPaymentMethod == 2
+                                ? MAKE_AN_APPOINTMENT
+                                : PROCESS_PAYMENT,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: WHITE,
+                                fontSize: 18),
+                          ),
+                        )
                       ],
                     ),
                   ),
-
-                  Container(
-                    height: 50,
-                    margin: EdgeInsets.fromLTRB(20, 10, 20, 20),
-                    //width: MediaQuery.of(context).size.width,
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pop(context);
-                        if(selectedPaymentMethod == 0){
-                          processBrainTreePaymentAndBookAppointment();
-                        }else if(selectedPaymentMethod == 1){
-                          processStripePaymentAndBookAppointment();
-                        }else{
-                          bookAppointment(type: "cod");
-                        }
-                      },
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: Image.asset("assets/moreScreenImages/header_bg.png",
-                              height: 50,
-                              fit: BoxFit.fill,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              selectedPaymentMethod == 2 ? MAKE_AN_APPOINTMENT : PROCESS_PAYMENT,
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color: WHITE,
-                                  fontSize: 18
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            });
-      }
-    );
-  }
-  
-  paymentMethodCardTile({String title, String explanation, int index, StateSetter setState}) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: InkWell(
-      onTap: (){
-        setState(() {
-          selectedPaymentMethod = index;
-        });
-      },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 5),
-            padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              border: Border.all(color: LIGHT_GREY_TEXT),
-              shape: BoxShape.circle,
-            ),
-            child: Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: selectedPaymentMethod == index ? AMBER : Colors.transparent,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          // ClipRRect(
-          //     borderRadius: BorderRadius.circular(5),
-          //     child: Image.asset("assets/makeAppointmentScreenImages/brain_tree.png", height: 30, width: 50, fit: BoxFit.fill,)),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),),
-                Text(explanation, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: LIGHT_GREY_TEXT),)
+                ),
               ],
-            ),
-          )
-        ],
-      ),
-    ),
-  );
+            );
+          });
+        });
+  }
 
-  processBrainTreePaymentAndBookAppointment() async{
+  paymentMethodCardTile(
+          {String title,
+          String explanation,
+          int index,
+          StateSetter setState}) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              selectedPaymentMethod = index;
+            });
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  border: Border.all(color: LIGHT_GREY_TEXT),
+                  shape: BoxShape.circle,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: selectedPaymentMethod == index
+                        ? AMBER
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              // ClipRRect(
+              //     borderRadius: BorderRadius.circular(5),
+              //     child: Image.asset("assets/makeAppointmentScreenImages/brain_tree.png", height: 30, width: 50, fit: BoxFit.fill,)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                    ),
+                    Text(
+                      explanation,
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: LIGHT_GREY_TEXT),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+  processBrainTreePaymentAndBookAppointment() async {
     var request = BraintreeDropInRequest(
       tokenizationKey: TOKENIZATION_KEY,
       collectDeviceData: true,
@@ -946,13 +1021,14 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     }
   }
 
-  processStripePaymentAndBookAppointment() async{
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MyCardDetails(true)));
+  processStripePaymentAndBookAppointment() async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyCardDetails(true)));
     await Future.delayed(Duration(seconds: 2));
-    String token = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyCardDetails(false)));
-    if(token != null){
+    String token = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyCardDetails(false)));
+    if (token != null) {
       bookAppointment(nonce: token, type: "2");
     }
   }
-
 }
