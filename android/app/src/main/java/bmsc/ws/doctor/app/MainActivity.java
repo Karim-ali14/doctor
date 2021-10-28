@@ -1,4 +1,4 @@
-package bms.doctor.app;
+package bmsc.ws.doctor.app;
 
 import org.json.JSONException;
 

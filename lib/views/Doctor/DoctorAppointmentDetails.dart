@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DoctorAppointmentDetails extends StatefulWidget {
   String id;
+
   DoctorAppointmentDetails(this.id);
 
   @override
@@ -67,7 +68,6 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
 
   @override
   Widget build(BuildContext context) {
-
     // fetchAppointmentDetails();
     // return Container();
     return SafeArea(
@@ -283,10 +283,17 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                   SizedBox(
                     height: 5,
                   ),
+/*
                   Text(
-                      list.date.toString().substring(8)+"-"+list.date.toString().substring(5,7)+"-"+list.date.toString().substring(0,4),
-                      style: Theme.of(context).textTheme.caption
-                  ),
+                      list.date.toString().substring(8) +
+                          "-" +
+                          list.date.toString().substring(5, 7) +
+                          "-" +
+                          list.date.toString().substring(0, 4),
+                      style: Theme.of(context).textTheme.caption),
+*/
+                  Text(list.date.toString(),
+                      style: Theme.of(context).textTheme.caption),
                   Text(list.slot,
                       style: Theme.of(context)
                           .textTheme
@@ -413,7 +420,6 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                 data: list.slot,
               ),
 */
-
             ],
           ),
         ),

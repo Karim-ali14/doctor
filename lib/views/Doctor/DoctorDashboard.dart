@@ -541,6 +541,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
                 SizedBox(
                   height: 5,
                 ),
+/*
                 Text(
                     list[index].date.toString().substring(8) +
                         "-" +
@@ -548,6 +549,12 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
                         "-" +
                         list[index].date.toString().substring(0, 4),
                     style: Theme.of(context).textTheme.caption),
+*/
+
+                Text(
+                    list[index].date.toString(),
+                    style: Theme.of(context).textTheme.caption),
+
                 Text(list[index].slot,
                     style: Theme.of(context)
                         .textTheme
