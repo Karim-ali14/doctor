@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 
-import '../en.dart';
 
 class ForgetPassword extends StatefulWidget {
 

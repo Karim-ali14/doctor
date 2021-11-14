@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/views/Doctor/DoctorTabScreen.dart';
-import 'package:book_appointment/views/RegisterAsUser.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../ForgetPassword.dart';
-import '../HomeScreen.dart';
+import 'ForgetPassword.dart';
 import 'RegisterAsDoctor.dart';
 
 class LoginAsDoctor extends StatefulWidget {

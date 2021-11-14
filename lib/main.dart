@@ -2,10 +2,7 @@
 import 'package:book_appointment/PaymentGateways/MyBrainTree.dart';
 import 'package:book_appointment/PaymentGateways/MyCardDetails.dart';
 import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
-import 'package:book_appointment/views/HomeScreen.dart';
-import 'package:book_appointment/views/MoreScreen.dart';
-import 'package:book_appointment/views/SplashScreen.dart';
-import 'package:book_appointment/views/UserPastAppointments.dart';
+import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -117,6 +114,7 @@ void main() async{
   );
 }
 
+/*
 class TabsScreen extends StatefulWidget {
   @override
   _TabsScreenState createState() => _TabsScreenState();
@@ -179,6 +177,7 @@ class _TabsScreenState extends State<TabsScreen> {
                 label: APPOINTMENT,
               ),
 
+*/
 /*
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -191,7 +190,8 @@ class _TabsScreenState extends State<TabsScreen> {
                 ),
                 label: DOCTOR_LOGIN,
               ),
-*/
+*//*
+
 
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -230,3 +230,4 @@ class _TabsScreenState extends State<TabsScreen> {
 
 }
 
+*/

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:book_appointment/main.dart';
-import 'package:book_appointment/views/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../en.dart';
+import 'loginAsDoctor.dart';
 
 class LogOutScreen extends StatefulWidget {
   @override
@@ -61,7 +61,7 @@ class _LogOutScreenState extends State<LogOutScreen> {
                   });
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context) => TabsScreen(),
+                    builder: (context) => LoginAsDoctor(),
                   ));
                 },
                 color: Theme.of(context).accentColor,

@@ -3,14 +3,13 @@ import 'dart:convert';
 
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/views/Doctor/DoctorTabScreen.dart';
-import 'package:book_appointment/views/HomeScreen.dart';
-import 'package:book_appointment/views/loginAsUser.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Doctor/DoctorAppointmentDetails.dart';
-import 'UserAppointmentDetails.dart';
+import 'DoctorAppointmentDetails.dart';
+import '../UserAppointmentDetails.dart';
+import 'loginAsDoctor.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,45 +17,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   bool isTokenAvailable = false;
   String token;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
-  getToken() async{
-    SharedPreferences.getInstance().then((pref){
-      if(pref.getBool("isTokenExist") ?? false){
-        Timer(Duration(seconds: 2), (){
-
-          if(pref.getBool("isLoggedInAsDoctor") ?? false) {
+  getToken() async {
+    SharedPreferences.getInstance().then((pref) {
+      if (pref.getBool("isTokenExist") ?? false) {
+        Timer(Duration(seconds: 2), () {
+          if (pref.getBool("isLoggedInAsDoctor") ?? false) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => DoctorTabsScreen())
-            );
-          }
-          else if(pref.getBool("isLoggedIn") ?? false) {
+                MaterialPageRoute(builder: (context) => DoctorTabsScreen()));
+          } else if (pref.getBool("isLoggedIn") ?? false) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => TabsScreen())
-            );
-          }
-          else{
+                MaterialPageRoute(builder: (context) => LoginAsDoctor()));
+          } else {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => TabsScreen())
-            );
+                MaterialPageRoute(builder: (context) => LoginAsDoctor()));
           }
-
         });
-      }else{
+      } else {
         print("value is null");
-        Timer(Duration(seconds: 2),(){
+        Timer(Duration(seconds: 2), () {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => TabsScreen())
-          );
+              MaterialPageRoute(builder: (context) => LoginAsDoctor()));
         });
       }
     });
-
   }
-
 
   @override
   void initState() {
@@ -65,42 +53,34 @@ class _SplashScreenState extends State<SplashScreen> {
     getToken();
   }
 
-  storeToken() async{
-    final response = await post(
-        "$SERVER_ADDRESS/api/savetoken",
-      body: {
-          "token":token,
-         "type": "1",
-      }
-    ).catchError((e){
-      Timer(Duration(seconds: 2),(){
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => TabsScreen())
-        );
+  storeToken() async {
+    final response = await post("$SERVER_ADDRESS/api/savetoken", body: {
+      "token": token,
+      "type": "1",
+    }).catchError((e) {
+      Timer(Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginAsDoctor()));
       });
     });
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      if(jsonResponse['success'] == "1"){
-        Timer(Duration(seconds: 2), (){
-          SharedPreferences.getInstance().then((pref){
+      if (jsonResponse['success'] == "1") {
+        Timer(Duration(seconds: 2), () {
+          SharedPreferences.getInstance().then((pref) {
             pref.setBool("isTokenExist", true);
             print("token stored");
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => TabsScreen())
-            );
+                MaterialPageRoute(builder: (context) => LoginAsDoctor()));
           });
         });
       }
-    }
-    else{
+    } else {
       print("token not stored");
-      Timer(Duration(seconds: 2),(){
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => TabsScreen())
-        );
+      Timer(Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginAsDoctor()));
       });
-
     }
   }
 
@@ -110,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: [
           Image.asset(
-              "assets/splash_bg.png",
+            "assets/splash_bg.png",
             fit: BoxFit.fill,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -119,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
             padding: const EdgeInsets.all(85),
             child: Center(
               child: Image.asset(
-                  "assets/splash_icon.png",
+                "assets/splash_icon.png",
                 fit: BoxFit.fill,
               ),
             ),
@@ -128,9 +108,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
 }
-
 
 // FirebaseMessaging().getToken().then((value){
 //   //Toast.show(value, context, duration: 2);

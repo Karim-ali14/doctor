@@ -17,7 +17,6 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../notificationHelper.dart';
-import '../AllAppointments.dart';
 
 class DoctorDashboard extends StatefulWidget {
   @override

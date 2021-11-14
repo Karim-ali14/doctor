@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../AppointmentScreen.dart';
-import '../HomeScreen.dart';
 import '../UserAppointmentDetails.dart';
 import 'DoctorAppointmentDetails.dart';
 
