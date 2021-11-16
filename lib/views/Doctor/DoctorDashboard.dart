@@ -34,7 +34,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
 
   fetchDoctorAppointment() async {
     final response =
-        await get("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$doctorId");
+        await get(Uri.parse("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$doctorId"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == "1") {
@@ -53,7 +53,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
 
   fetchDoctorDetails() async {
     final response =
-        await get("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId")
+        await get(Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
             .catchError((e) {
       setState(() {
         isErrorInLoading = true;
@@ -367,11 +367,6 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
                       children: [
                         appointmentListWidget(index,
                             doctorAppointmentsClass.data.doctorAppointmentData),
-                        ENABLE_ADS
-                            ? (index + 1) % 4 == 0
-                                ? customAds.nativeAds(id: AD_TYPE)
-                                : Container()
-                            : Container()
                       ],
                     );
                   },

@@ -31,7 +31,7 @@ class _DoctorPastAppointmentsState extends State<DoctorPastAppointments> {
   ScrollController _scrollController = ScrollController();
 
   fetchPastAppointments() async{
-    final response = await get("$SERVER_ADDRESS/api/doctorpastappointment?doctor_id=$userId");
+    final response = await get(Uri.parse("$SERVER_ADDRESS/api/doctorpastappointment?doctor_id=$userId"));
     if(response.statusCode == 200){
       final jsonResponse = jsonDecode(response.body);
       if(jsonResponse['success'] == "1"){
@@ -52,7 +52,7 @@ class _DoctorPastAppointmentsState extends State<DoctorPastAppointments> {
 
   loadmore() async{
     if(nextUrl != "null") {
-      final response = await get("$nextUrl&doctor_id=$userId");
+      final response = await get(Uri.parse("$nextUrl&doctor_id=$userId"));
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['success'] == "1") {
@@ -175,7 +175,6 @@ class _DoctorPastAppointmentsState extends State<DoctorPastAppointments> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         appointmentListWidget(index, list),
-                        ENABLE_ADS ? (index+1)%4 == 0 && index != 0 ? customAds.nativeAds(id: AD_TYPE) : Container() : Container()
                       ],
                     );
                   },

@@ -30,7 +30,7 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
   fetchAppointmentDetails() async {
     print(widget.id);
     final response = await get(
-        "$SERVER_ADDRESS/api/appointmentdetail?id=${widget.id}&type=2");
+       Uri.parse( "$SERVER_ADDRESS/api/appointmentdetail?id=${widget.id}&type=2"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
 
@@ -620,7 +620,7 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
   changeStatus(status) async {
     dialog();
     final response = await post(
-        "$SERVER_ADDRESS/api/appointmentstatuschange?app_id=${widget.id}&status=$status");
+        Uri.parse("$SERVER_ADDRESS/api/appointmentstatuschange?app_id=${widget.id}&status=$status"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == "1") {

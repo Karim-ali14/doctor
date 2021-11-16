@@ -18,9 +18,9 @@ public final class GeneratedPluginRegistrant {
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
     try {
-      flutterEngine.getPlugins().add(new io.flutter.plugins.deviceinfo.DeviceInfoPlugin());
+      flutterEngine.getPlugins().add(new io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin device_info, io.flutter.plugins.deviceinfo.DeviceInfoPlugin", e);
+      Log.e(TAG, "Error registering plugin firebase_analytics, io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin());
@@ -28,29 +28,14 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin firebase_core, io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin());
+      flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin firebase_messaging, io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new com.example.flutter_braintree.FlutterBraintreePlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_braintree, com.example.flutter_braintree.FlutterBraintreePlugin", e);
+      Log.e(TAG, "Error registering plugin firebase_messaging, io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingPlugin", e);
     }
     try {
       com.roughike.facebooklogin.facebooklogin.FacebookLoginPlugin.registerWith(shimPluginRegistry.registrarFor("com.roughike.facebooklogin.facebooklogin.FacebookLoginPlugin"));
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin flutter_facebook_login, com.roughike.facebooklogin.facebooklogin.FacebookLoginPlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_local_notifications, com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin", e);
-    }
-    try {
-      com.nover.flutternativeadmob.FlutterNativeAdmobPlugin.registerWith(shimPluginRegistry.registrarFor("com.nover.flutternativeadmob.FlutterNativeAdmobPlugin"));
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_native_admob, com.nover.flutternativeadmob.FlutterNativeAdmobPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
@@ -83,6 +68,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin image_picker, io.flutter.plugins.imagepicker.ImagePickerPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new dev.flutter.plugins.integration_test.IntegrationTestPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin integration_test, dev.flutter.plugins.integration_test.IntegrationTestPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin path_provider, io.flutter.plugins.pathprovider.PathProviderPlugin", e);
@@ -101,11 +91,6 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new com.tekartik.sqflite.SqflitePlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin sqflite, com.tekartik.sqflite.SqflitePlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new com.flutter.stripe.StripeAndroidPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin stripe_android, com.flutter.stripe.StripeAndroidPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());

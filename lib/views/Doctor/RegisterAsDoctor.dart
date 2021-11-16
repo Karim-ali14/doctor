@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'SplashScreen.dart';
+
 class RegisterAsDoctor extends StatefulWidget {
   @override
   _RegisterAsDoctorState createState() => _RegisterAsDoctorState();
@@ -33,7 +35,7 @@ class _RegisterAsDoctorState extends State<RegisterAsDoctor> {
 
   storeToken() async{
     dialog();
-    await FirebaseMessaging().getToken().then((value) async{
+    await firebaseMessaging.getToken().then((value) async{
       //Toast.show(value, context, duration: 2);
       print(value);
       setState(() {
@@ -41,7 +43,7 @@ class _RegisterAsDoctorState extends State<RegisterAsDoctor> {
       });
 
       final response = await post(
-          "$SERVER_ADDRESS/api/savetoken",
+          Uri.parse("$SERVER_ADDRESS/api/savetoken"),
           body: {
             "token":token,
             "type": "1",
@@ -110,7 +112,7 @@ class _RegisterAsDoctorState extends State<RegisterAsDoctor> {
       dialog();
       //Toast.show("Creating account please wait", context);
       String url = "$SERVER_ADDRESS/api/doctorregister?name=$name&email=$email&phone=$phoneNumber&password=$password&token=$token";
-      var response = await post(url, body: {
+      var response = await post(Uri.parse(url), body: {
         'name': name,
         'email': email,
         'phone': phoneNumber,
@@ -157,7 +159,7 @@ class _RegisterAsDoctorState extends State<RegisterAsDoctor> {
   getToken() async{
     await SharedPreferences.getInstance().then((pref) async{
       if(pref.getBool("isTokenExist") ?? false) {
-        String tokenLocal = await FirebaseMessaging().getToken();
+        String tokenLocal = await firebaseMessaging.getToken();
         setState(()  {
           print("1-> token retrieved");
           token = tokenLocal;

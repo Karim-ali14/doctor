@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/views/Doctor/DoctorTabScreen.dart';
+import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
   getToken() async{
     await SharedPreferences.getInstance().then((pref) async{
       if(pref.getBool("isTokenExist") ?? false) {
-        String tokenLocal = await FirebaseMessaging().getToken();
+        String tokenLocal = await firebaseMessaging.getToken();
         setState(()  {
           print("1-> token retrieved");
           token = tokenLocal;
@@ -43,7 +44,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
 
   storeToken() async{
     dialog();
-    await FirebaseMessaging().getToken().then((value) async{
+    await firebaseMessaging..getToken().then((value) async{
       //Toast.show(value, context, duration: 2);
       print(value);
       setState(() {
@@ -51,7 +52,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
       });
 
       final response = await post(
-          "$SERVER_ADDRESS/api/savetoken",
+          Uri.parse("$SERVER_ADDRESS/api/savetoken"),
           body: {
             "token":token,
             "type": "1",
@@ -102,7 +103,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
       dialog();
       //Toast.show("Logging in..", context, duration: 2);
         String url = "$SERVER_ADDRESS/api/doctorlogin?email=$emailAddress&password=$pass&token=$token";
-        var response = await post(url, body: {
+        var response = await post(Uri.parse(url), body: {
           'email': emailAddress,
           'password': pass,
           'token': token,

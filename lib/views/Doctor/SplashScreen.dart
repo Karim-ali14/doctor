@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'DoctorAppointmentDetails.dart';
 import '../UserAppointmentDetails.dart';
 import 'loginAsDoctor.dart';
+FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,7 +20,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   bool isTokenAvailable = false;
   String token;
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   getToken() async {
     SharedPreferences.getInstance().then((pref) {
@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   storeToken() async {
-    final response = await post("$SERVER_ADDRESS/api/savetoken", body: {
+    final response = await post(Uri.parse("$SERVER_ADDRESS/api/savetoken"), body: {
       "token": token,
       "type": "1",
     }).catchError((e) {

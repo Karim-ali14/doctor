@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<device_info/FLTDeviceInfoPlugin.h>)
-#import <device_info/FLTDeviceInfoPlugin.h>
+#if __has_include(<firebase_analytics/FLTFirebaseAnalyticsPlugin.h>)
+#import <firebase_analytics/FLTFirebaseAnalyticsPlugin.h>
 #else
-@import device_info;
+@import firebase_analytics;
 #endif
 
 #if __has_include(<firebase_core/FLTFirebaseCorePlugin.h>)
@@ -24,28 +24,10 @@
 @import firebase_messaging;
 #endif
 
-#if __has_include(<flutter_braintree/FlutterBraintreePlugin.h>)
-#import <flutter_braintree/FlutterBraintreePlugin.h>
-#else
-@import flutter_braintree;
-#endif
-
 #if __has_include(<flutter_facebook_login/FacebookLoginPlugin.h>)
 #import <flutter_facebook_login/FacebookLoginPlugin.h>
 #else
 @import flutter_facebook_login;
-#endif
-
-#if __has_include(<flutter_local_notifications/FlutterLocalNotificationsPlugin.h>)
-#import <flutter_local_notifications/FlutterLocalNotificationsPlugin.h>
-#else
-@import flutter_local_notifications;
-#endif
-
-#if __has_include(<flutter_native_admob/FlutterNativeAdmobPlugin.h>)
-#import <flutter_native_admob/FlutterNativeAdmobPlugin.h>
-#else
-@import flutter_native_admob;
 #endif
 
 #if __has_include(<geocoder/GeocoderPlugin.h>)
@@ -78,6 +60,12 @@
 @import image_picker;
 #endif
 
+#if __has_include(<integration_test/IntegrationTestPlugin.h>)
+#import <integration_test/IntegrationTestPlugin.h>
+#else
+@import integration_test;
+#endif
+
 #if __has_include(<path_provider/FLTPathProviderPlugin.h>)
 #import <path_provider/FLTPathProviderPlugin.h>
 #else
@@ -102,12 +90,6 @@
 @import sqflite;
 #endif
 
-#if __has_include(<stripe_ios/StripeIosPlugin.h>)
-#import <stripe_ios/StripeIosPlugin.h>
-#else
-@import stripe_ios;
-#endif
-
 #if __has_include(<url_launcher/FLTURLLauncherPlugin.h>)
 #import <url_launcher/FLTURLLauncherPlugin.h>
 #else
@@ -117,23 +99,20 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
-  [FLTDeviceInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlugin"]];
+  [FLTFirebaseAnalyticsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAnalyticsPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseMessagingPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseMessagingPlugin"]];
-  [FlutterBraintreePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterBraintreePlugin"]];
   [FacebookLoginPlugin registerWithRegistrar:[registry registrarForPlugin:@"FacebookLoginPlugin"]];
-  [FlutterLocalNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLocalNotificationsPlugin"]];
-  [FlutterNativeAdmobPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterNativeAdmobPlugin"]];
   [GeocoderPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeocoderPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
   [FLTGoogleMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMapsPlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [IntegrationTestPlugin registerWithRegistrar:[registry registrarForPlugin:@"IntegrationTestPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
-  [StripeIosPlugin registerWithRegistrar:[registry registrarForPlugin:@"StripeIosPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
 }
 

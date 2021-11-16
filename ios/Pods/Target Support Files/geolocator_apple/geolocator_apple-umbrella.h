@@ -21,6 +21,7 @@
 #import "LocationAccuracyMapper.h"
 #import "LocationDistanceMapper.h"
 #import "LocationMapper.h"
+#import "PermissionUtils.h"
 #import "ServiceStatus.h"
 
 FOUNDATION_EXPORT double geolocator_appleVersionNumber;

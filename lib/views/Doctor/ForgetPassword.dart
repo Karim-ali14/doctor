@@ -221,7 +221,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   sendEmail() async{
     processingDialog(PLEASE_WAIT_WHILE_PROCESSING);
-    final response = await get("$SERVER_ADDRESS/api/forgotpassword?type=${widget.id}&email=$email")
+    final response = await get(Uri.parse("$SERVER_ADDRESS/api/forgotpassword?type=${widget.id}&email=$email"))
     .catchError((e){
       messageDialog(ERROR, e.toString());
     });

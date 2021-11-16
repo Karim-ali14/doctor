@@ -22,15 +22,15 @@
 
     ],
     "GoogleMaps": [
-      "< 3.10"
+
     ]
   },
   "static_framework": true,
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "pod_target_xcconfig": {
     "DEFINES_MODULE": "YES",
-    "VALID_ARCHS[sdk=iphonesimulator*]": "x86_64"
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
   }
 }

@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../UserAppointmentDetails.dart';
 import 'DoctorAppointmentDetails.dart';
+import 'SplashScreen.dart';
 
 
 class DoctorTabsScreen extends StatefulWidget {
@@ -29,19 +30,18 @@ class _DoctorTabsScreenState extends State<DoctorTabsScreen> {
   ];
 
   int index = 0;
-  NotificationHelper notificationHelper = NotificationHelper();
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  // NotificationHelper notificationHelper = NotificationHelper();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    notificationHelper.initialize();
-    firebaseMessaging.configure(
+    // notificationHelper.initialize();
+/*    firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         print("\n\n"+message.toString());
-        notificationHelper.showNotification(title: message['notification']['title'],body: message['notification']['body'] ,payload: "${message['data']['type']}:${message['data']['order_id']}", id: "124", context2: context);
+        // notificationHelper.showNotification(title: message['notification']['title'],body: message['notification']['body'] ,payload: "${message['data']['type']}:${message['data']['order_id']}", id: "124", context2: context);
       },
       //onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
@@ -72,7 +72,7 @@ class _DoctorTabsScreenState extends State<DoctorTabsScreen> {
           );
         }
       },
-    );
+    );*/
   }
 
   @override

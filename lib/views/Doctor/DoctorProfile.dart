@@ -54,7 +54,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
 
 
   fetchDoctorSchedule() async{
-    final response = await get("$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=$doctorId");
+    final response = await get(Uri.parse("$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=$doctorId"));
     if(response.statusCode == 200){
       final jsonResponse = jsonDecode(response.body);
       setState(() {
@@ -66,7 +66,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
 
   fetchDoctorProfileDetails() async{
     print("REQUEST URL : $SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId");
-    final response = await get("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId")
+    final response = await get(Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
     .catchError((e){
       setState(() {
         isErrorInLoading = true;
@@ -474,7 +474,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
   }
   
   getSpecialities() async{
-    final response = await get("$SERVER_ADDRESS/api/getspeciality");
+    final response = await get(Uri.parse("$SERVER_ADDRESS/api/getspeciality"));
     if(response.statusCode == 200){
       final jsonResponse = jsonDecode(response.body);
       specialityClass = SpecialityClass.fromJson(jsonResponse);
@@ -1358,7 +1358,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
     print(twitter);
     print(base64image);
     if(_image == null){
-      final response = await post("$SERVER_ADDRESS/api/doctoreditprofile",
+      final response = await post(Uri.parse("$SERVER_ADDRESS/api/doctoreditprofile"),
           body: {
             "doctor_id" : doctorId,
             "name" : name,

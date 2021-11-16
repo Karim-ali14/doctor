@@ -33,7 +33,7 @@ class _DoctorAllAppointmentsState extends State<DoctorAllAppointments> {
 
   fetchPastAppointments() async {
     final response =
-        await get("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$userId");
+        await get(Uri.parse("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$userId"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == "1") {
@@ -55,7 +55,7 @@ class _DoctorAllAppointmentsState extends State<DoctorAllAppointments> {
 
   loadmore() async {
     if (nextUrl != "null") {
-      final response = await get("$nextUrl&doctor_id=$userId");
+      final response = await get(Uri.parse("$nextUrl&doctor_id=$userId"));
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['success'] == "1") {
@@ -180,11 +180,6 @@ class _DoctorAllAppointmentsState extends State<DoctorAllAppointments> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           appointmentListWidget(index, list),
-                          ENABLE_ADS
-                              ? (index + 1) % 4 == 0 && index != 0
-                                  ? customAds.nativeAds(id: AD_TYPE)
-                                  : Container()
-                              : Container()
                         ],
                       );
                     }

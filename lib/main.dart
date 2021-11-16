@@ -1,6 +1,5 @@
 
-import 'package:book_appointment/PaymentGateways/MyBrainTree.dart';
-import 'package:book_appointment/PaymentGateways/MyCardDetails.dart';
+
 import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
 import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:book_appointment/CustomAds.dart';
+
 
 import 'en.dart';
 
@@ -47,7 +46,7 @@ String STRIPE_KEY = "pk_test_yFUNiYsEESF7QBY0jcZoYK9j00yHumvXho";
 String TOKENIZATION_KEY = "sandbox_bn2rby52_8x2htw9jqj88wsyf";
 //final nativeAdController = NativeAdmobController();
 String LANGUAGE_FILE = "en";
-CustomAds customAds = CustomAds();
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +56,6 @@ void main() async{
   // nativeAdController.stateChanged.listen((event) {
   //   print(event);
   // });
-
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
       MaterialApp(

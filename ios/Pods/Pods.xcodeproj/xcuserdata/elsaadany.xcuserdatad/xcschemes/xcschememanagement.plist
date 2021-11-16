@@ -9,21 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Braintree.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>BraintreeDropIn-BraintreeDropIn-Localization.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>BraintreeDropIn.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>FBSDKCoreKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -44,6 +29,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>FirebaseAnalytics.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FirebaseCore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -55,11 +45,6 @@
 			<false/>
 		</dict>
 		<key>FirebaseInstallations.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>FirebaseInstanceID.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -84,11 +69,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Google-Mobile-Ads-SDK.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>GoogleAppMeasurement.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -109,11 +89,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>GoogleUserMessagingPlatform.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>GoogleUtilities.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -129,37 +104,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Protobuf.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>PureLayout.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Stripe-Stripe.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Stripe-Stripe3DS2.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Stripe.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>StripeCore.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>device_info.xcscheme</key>
+		<key>firebase_analytics.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -174,22 +119,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>flutter_braintree.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>flutter_facebook_login.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>flutter_local_notifications.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>flutter_native_admob.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -219,6 +149,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>integration_test.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>nanopb.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -240,11 +175,6 @@
 			<false/>
 		</dict>
 		<key>sqflite.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>stripe_ios.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
