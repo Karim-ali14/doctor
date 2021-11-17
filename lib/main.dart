@@ -50,6 +50,7 @@ String LANGUAGE_FILE = "en";
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
 
   // nativeAdController.setNonPersonalizedAds(true);
   // nativeAdController.setTestDeviceIds(["0B43A6DF92B4C06E3D9DBF00BA6DA410"]);
