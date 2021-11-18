@@ -15,6 +15,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+#flutter pub run flutter_launcher_icons:main
+#flutter pub run flutter_native_splash:create
+#flutter pub run flutter_app_name
+# flutter pub run flutter_launcher_icons:main
+# flutter pub run change_app_package_name:main bmsc.ws.gis.store
+
 version: 9.0.0+10
 
 environment:
