@@ -21,7 +21,6 @@ class LoginAsDoctor extends StatefulWidget {
 }
 
 class _LoginAsDoctorState extends State<LoginAsDoctor> {
-
   String emailAddress = "";
   String pass = "";
   bool isPhoneNumberError = false;
@@ -30,11 +29,11 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
   String token = "";
   bool isTokenPresent = false;
 
-  getToken() async{
-    await SharedPreferences.getInstance().then((pref) async{
-      if(pref.getBool("isTokenExist") ?? false) {
+  getToken() async {
+    await SharedPreferences.getInstance().then((pref) async {
+      if (pref.getBool("isTokenExist") ?? false) {
         String tokenLocal = await firebaseMessaging.getToken();
-        setState(()  {
+        setState(() {
           print("1-> token retrieved");
           token = tokenLocal;
         });
@@ -42,125 +41,129 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
     });
   }
 
-  storeToken() async{
+  storeToken() async {
     dialog();
-    await firebaseMessaging..getToken().then((value) async{
-      //Toast.show(value, context, duration: 2);
-      print(value);
-      setState(() {
-        token =value;
-      });
+    await firebaseMessaging
+      ..getToken().then((value) async {
+        //Toast.show(value, context, duration: 2);
+        print(value);
+        setState(() {
+          token = value;
+        });
 
-      final response = await post(
-          Uri.parse("$SERVER_ADDRESS/api/savetoken"),
-          body: {
-            "token":token,
-            "type": "1",
+        final response =
+            await post(Uri.parse("$SERVER_ADDRESS/api/savetoken"), body: {
+          "token": token,
+          "type": "1",
+        }).catchError((e) {
+          Navigator.pop(context);
+          messageDialog(ERROR, UNABLE_TO_SAVE_TOKEN_TO_SERVER);
+        });
+        if (response.statusCode == 200) {
+          Navigator.pop(context);
+          final jsonResponse = jsonDecode(response.body);
+          if (jsonResponse['success'] == "1") {
+            SharedPreferences.getInstance().then((pref) {
+              pref.setBool("isTokenExist", true);
+              print("token stored");
+            });
+            //Navigator.pop(context);
+            loginInto();
           }
-      ).catchError((e){
+        } else {
+          Navigator.pop(context);
+          print("token not stored");
+          messageDialog(ERROR, response.body.toString());
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) => TabsScreen())
+          // );
+        }
+      }).catchError((e) {
         Navigator.pop(context);
+        print("token not accessed");
         messageDialog(ERROR, UNABLE_TO_SAVE_TOKEN_TO_SERVER);
       });
-      if(response.statusCode == 200){
-        Navigator.pop(context);
-        final jsonResponse = jsonDecode(response.body);
-        if(jsonResponse['success'] == "1"){
-          SharedPreferences.getInstance().then((pref){
-            pref.setBool("isTokenExist", true);
-            print("token stored");
-          });
-          //Navigator.pop(context);
-          loginInto();
-        }
-      }
-      else{
-        Navigator.pop(context);
-        print("token not stored");
-        messageDialog(ERROR, response.body.toString());
-        // Navigator.pushReplacement(context,
-        //     MaterialPageRoute(builder: (context) => TabsScreen())
-        // );
-      }
-
-    }).catchError((e){
-      Navigator.pop(context);
-      print("token not accessed");
-      messageDialog(ERROR, UNABLE_TO_SAVE_TOKEN_TO_SERVER);
-    });
     setState(() {
-      token ="";
+      token = "";
     });
   }
 
-  loginInto() async{
-    if(EmailValidator.validate(emailAddress) == false){
+  loginInto() async {
+    if (EmailValidator.validate(emailAddress) == false) {
       setState(() {
         isPhoneNumberError = true;
       });
-
-    }
-    else {
+    } else {
       dialog();
       //Toast.show("Logging in..", context, duration: 2);
-        String url = "$SERVER_ADDRESS/api/doctorlogin?email=$emailAddress&password=$pass&token=$token";
-        var response = await post(Uri.parse(url), body: {
-          'email': emailAddress,
-          'password': pass,
-          'token': token,
-        }).catchError((e){
-          Navigator.pop(context);
-          messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
-        });
-        try {
-          print(response.statusCode);
-          print(response.body);
-          var jsonResponse = await jsonDecode(response.body);
-          if (jsonResponse['success'] == "0") {
-            setState(() {
-              Navigator.pop(context);
-              isPasswordError = true;
-              passErrorText = EITHER_MOBILE_NUMBER_OR_PASSWORD_IS_INCORRECT;
-            });
-          } else {
-            await SharedPreferences.getInstance().then((pref) {
-              pref.setBool("isLoggedInAsDoctor", true);
-              pref.setString(
-                  "userId", jsonResponse['register']['doctor_id'].toString());
-              pref.setString("name", jsonResponse['register']['name']);
-              pref.setString(
-                  "phone", jsonResponse['register']['phone'].toString());
-              pref.setString("email", jsonResponse['register']['email']);
-              pref.setString("token", token.toString());
-            });
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => DoctorTabsScreen())
-            );
-          }
-        }catch(e){
-          Navigator.pop(context);
-          messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
+      String url =
+          "$SERVER_ADDRESS/api/doctorlogin?email=$emailAddress&password=$pass&token=$token";
+      var response = await post(Uri.parse(url), body: {
+        'email': emailAddress,
+        'password': pass,
+        'token': token,
+      }).catchError((e) {
+        Navigator.pop(context);
+        messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
+      });
+      try {
+        print(response.statusCode);
+        print(response.body);
+        var jsonResponse = await jsonDecode(response.body);
+        if (jsonResponse['success'] == "0") {
+          setState(() {
+            Navigator.pop(context);
+            isPasswordError = true;
+            passErrorText = EITHER_MOBILE_NUMBER_OR_PASSWORD_IS_INCORRECT;
+          });
+        } else {
+          await SharedPreferences.getInstance().then((pref) {
+            pref.setBool("isLoggedInAsDoctor", true);
+            pref.setString(
+                "userId", jsonResponse['register']['doctor_id'].toString());
+            pref.setString("name", jsonResponse['register']['name']);
+            pref.setString(
+                "phone", jsonResponse['register']['phone'].toString());
+            pref.setString("email", jsonResponse['register']['email']);
+            pref.setString('savedEmail', jsonResponse['register']['email']);
+
+            pref.setString("token", token.toString());
+          });
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => DoctorTabsScreen()));
         }
-
+      } catch (e) {
+        Navigator.pop(context);
+        messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
+      }
+    }
   }
-
-  }
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getToken();
-    SharedPreferences.getInstance().then((pref){
+    final savedEmail = (sharedPreferences.getString('savedEmail'));
+
+    if (savedEmail != null) {
+      emailController.text = savedEmail;
+      emailAddress = savedEmail;
+    }
+
+    SharedPreferences.getInstance().then((pref) {
       setState(() {
         isTokenPresent = pref.getBool("isTokenExist") ?? false;
       });
     });
   }
 
+  final emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    // sharedPreferences.setString('savedEmail', null);
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -180,10 +183,11 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -192,7 +196,9 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
           height: 60,
           child: Row(
             children: [
-              SizedBox(width: 15,),
+              SizedBox(
+                width: 15,
+              ),
               // InkWell(
               //   onTap: (){
               //     Navigator.pop(context);
@@ -206,10 +212,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               Text(
                 DOCTOR_LOGIN,
                 style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    color: WHITE,
-                    fontSize: 22
-                ),
+                    fontWeight: FontWeight.w600, color: WHITE, fontSize: 22),
               )
             ],
           ),
@@ -218,14 +221,15 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
     );
   }
 
-  Widget bottom(){
+  Widget bottom() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(DO_NOT_HAVE_AN_ACCOUNT,
+            Text(
+              DO_NOT_HAVE_AN_ACCOUNT,
               style: GoogleFonts.poppins(
                 color: BLACK,
                 fontSize: 12,
@@ -233,12 +237,14 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               ),
             ),
             GestureDetector(
-              onTap: (){
-                Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RegisterAsDoctor())
-                );
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterAsDoctor()));
               },
-              child: Text(" $REGISTER_NOW",
+              child: Text(
+                " $REGISTER_NOW",
                 style: GoogleFonts.poppins(
                   color: AMBER,
                   fontSize: 12,
@@ -255,12 +261,13 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
     );
   }
 
-  Widget loginForm(){
+  Widget loginForm() {
     return Container(
       decoration: BoxDecoration(
           color: WHITE,
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
-      ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20))),
       height: MediaQuery.of(context).size.height - 100,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -274,24 +281,23 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
             ),
             SizedBox(height: 20),
             TextField(
+              controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   labelText: ENTER_YOUR_EMAIL,
                   labelStyle: GoogleFonts.poppins(
-                      color: LIGHT_GREY_TEXT,
-                      fontWeight: FontWeight.w400
-                  ),
-                  errorText: isPhoneNumberError ? ENTER_VALID_EMAIL_ADDRESS : null,
+                      color: LIGHT_GREY_TEXT, fontWeight: FontWeight.w400),
+                  errorText:
+                      isPhoneNumberError ? ENTER_VALID_EMAIL_ADDRESS : null,
                   focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: LIGHT_GREY_TEXT,)
-                  )
-              ),
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500
-              ),
-              onChanged: (val){
+                      borderSide: BorderSide(
+                    color: LIGHT_GREY_TEXT,
+                  ))),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              onChanged: (val) {
+                print('on Changed called $val');
                 setState(() {
-                  emailAddress =val;
+                  emailAddress = val.trim();
                   isPhoneNumberError = false;
                   isPasswordError = false;
                 });
@@ -304,18 +310,15 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               decoration: InputDecoration(
                 labelText: PASSWORD,
                 labelStyle: GoogleFonts.poppins(
-                    color: LIGHT_GREY_TEXT,
-                    fontWeight: FontWeight.w400
-                ),
+                    color: LIGHT_GREY_TEXT, fontWeight: FontWeight.w400),
                 errorText: isPasswordError ? passErrorText : null,
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: LIGHT_GREY_TEXT,)
-                ),
+                    borderSide: BorderSide(
+                  color: LIGHT_GREY_TEXT,
+                )),
               ),
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500
-              ),
-              onChanged: (val){
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              onChanged: (val) {
                 setState(() {
                   pass = val;
                   isPasswordError = false;
@@ -327,18 +330,18 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                  onTap: (){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ForgetPassword("2"))
-                    );
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgetPassword("2")));
                   },
                   child: Text(
                     FORGET_PASSWORD,
                     style: TextStyle(
                         color: BLACK,
                         fontSize: 12,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -369,14 +372,15 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               height: 50,
               //width: MediaQuery.of(context).size.width,
               child: InkWell(
-                onTap: (){
+                onTap: () {
                   isTokenPresent ? loginInto() : storeToken();
                 },
                 child: Stack(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(25),
-                      child: Image.asset("assets/moreScreenImages/header_bg.png",
+                      child: Image.asset(
+                        "assets/moreScreenImages/header_bg.png",
                         height: 50,
                         fit: BoxFit.fill,
                         width: MediaQuery.of(context).size.width,
@@ -388,8 +392,7 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w500,
                             color: WHITE,
-                            fontSize: 18
-                        ),
+                            fontSize: 18),
                       ),
                     )
                   ],
@@ -404,12 +407,13 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
     );
   }
 
-  dialog(){
+  dialog() {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(LOGGING_IN,
+            title: Text(
+              LOGGING_IN,
               style: GoogleFonts.poppins(),
             ),
             content: Container(
@@ -417,56 +421,61 @@ class _LoginAsDoctorState extends State<LoginAsDoctor> {
               child: Row(
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(width: 15,),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
-                    child: Text(PLEASE_WAIT_LOGGING_IN,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12
-                      ),
+                    child: Text(
+                      PLEASE_WAIT_LOGGING_IN,
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
                   )
                 ],
               ),
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-            ),),
+            title: Text(
+              s1,
+              style: GoogleFonts.comfortaa(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),)
+                Text(
+                  s2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 color: Theme.of(context).accentColor,
-                child: Text(OK,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color: BLACK,
-                ),),
+                child: Text(
+                  OK,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: BLACK,
+                  ),
+                ),
               ),
             ],
           );
-        }
-    );
+        });
   }
-
-
-
 }

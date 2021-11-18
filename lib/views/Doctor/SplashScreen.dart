@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'DoctorAppointmentDetails.dart';
 import '../UserAppointmentDetails.dart';
 import 'loginAsDoctor.dart';
+
 FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
 class SplashScreen extends StatefulWidget {
@@ -54,7 +55,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   storeToken() async {
-    final response = await post(Uri.parse("$SERVER_ADDRESS/api/savetoken"), body: {
+    final response =
+        await post(Uri.parse("$SERVER_ADDRESS/api/savetoken"), body: {
       "token": token,
       "type": "1",
     }).catchError((e) {
@@ -87,24 +89,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            "assets/splash_bg.png",
-            fit: BoxFit.fill,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(85),
-            child: Center(
-              child: Image.asset(
-                "assets/splash_icon.png",
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-        ],
+      body: Image.asset(
+        "assets/splash.png",
+        fit: BoxFit.fill,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
       ),
     );
   }

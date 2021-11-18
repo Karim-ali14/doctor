@@ -775,42 +775,28 @@
         <entry key="shared_preferences">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.8/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="shared_preferences_linux">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-2.0.3/lib" />
+              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.6/lib" />
             </list>
           </value>
         </entry>
         <entry key="shared_preferences_macos">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-2.0.2/lib" />
+              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-0.0.1+11/lib" />
             </list>
           </value>
         </entry>
         <entry key="shared_preferences_platform_interface">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-2.0.0/lib" />
+              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-1.0.4/lib" />
             </list>
           </value>
         </entry>
         <entry key="shared_preferences_web">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-2.0.2/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="shared_preferences_windows">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.0.3/lib" />
+              <option value="$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-0.1.2+7/lib" />
             </list>
           </value>
         </entry>
@@ -1214,12 +1200,10 @@
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/rxdart-0.27.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/scoped_model-1.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/screenshots-2.1.1/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.8/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-2.0.3/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-2.0.2/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-2.0.0/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-2.0.2/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.0.3/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.6/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-0.0.1+11/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-1.0.4/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-0.1.2+7/lib" />
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shelf-1.2.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shelf_packages_handler-3.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../../sdks/flutter/.pub-cache/hosted/pub.dartlang.org/shelf_static-1.1.0/lib" />

@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 
-
 class ForgetPassword extends StatefulWidget {
-
   String id;
+
   ForgetPassword(this.id);
 
   @override
@@ -17,11 +16,22 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-
   String email = "";
   final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
   String animationName;
   String error;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final savedEmail = (sharedPreferences.getString('savedEmail'));
+    if (savedEmail != null) {
+      emailController.text = savedEmail;
+      email = savedEmail;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,24 +48,29 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
   }
 
-  body(){
+  body() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 40,),
+            SizedBox(
+              height: 40,
+            ),
             Image.asset(
-                "assets/loginScreenImages/forgetIcon.png",
+              "assets/loginScreenImages/forgetIcon.png",
               height: 170,
               width: 170,
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               children: [
                 Expanded(
-                  child: Text(ENTER_THE_EMAIL_ADDRESS_ASSOCIATED_WITH_YOUR_ACCOUNT,
+                  child: Text(
+                    ENTER_THE_EMAIL_ADDRESS_ASSOCIATED_WITH_YOUR_ACCOUNT,
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -64,31 +79,35 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 )
               ],
             ),
-            SizedBox(height: 40,),
+            SizedBox(
+              height: 40,
+            ),
             Row(
               children: [
                 Expanded(
-                  child: Text(WE_WILL_EMAIL_YOU_A_LINK_TO_RESET_YOUR_PASSWORD,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade600
-                    ),
+                  child: Text(
+                    WE_WILL_EMAIL_YOU_A_LINK_TO_RESET_YOUR_PASSWORD,
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                     textAlign: TextAlign.center,
                   ),
                 )
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Form(
               key: formKey,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextFormField(
-                  validator: (val){
-                    if(val.isEmpty){
-                      return EMAIL_ADDRESS;
-                    }else if(!EmailValidator.validate(val)){
+                  controller: emailController,
+                  validator: (val) {
+                    val = email;
+                    if (val.isEmpty) {
                       return THIS_FIELD_IS_REQUIRED;
+                    } else if (!EmailValidator.validate(val)) {
+                      return ENTER_VALID_EMAIL_ADDRESS;
                     }
                     return null;
                   },
@@ -97,31 +116,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     isCollapsed: true,
                     contentPadding: EdgeInsets.all(5),
                     border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 0.5
-                      )
-                    ),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5)),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 0.5
-                      )
-                    ),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5)),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 0.5
-                      )
-                    ),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5)),
                     disabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 0.5
-                      )
-                    ),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5)),
                   ),
-                  onChanged: (val){
+                  onChanged: (val) {
                     setState(() {
                       email = val;
                     });
@@ -129,7 +132,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 ),
               ),
             ),
-            SizedBox(height: 40,),
+            SizedBox(
+              height: 40,
+            ),
             button()
           ],
         ),
@@ -137,10 +142,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -149,24 +155,26 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           height: 60,
           child: Row(
             children: [
-              SizedBox(width: 15,),
+              SizedBox(
+                width: 15,
+              ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset("assets/moreScreenImages/back.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/back.png",
                   height: 25,
                   width: 22,
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Text(
                 FORGET_PASSWORD,
                 style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    color: WHITE,
-                    fontSize: 22
-                ),
+                    fontWeight: FontWeight.w600, color: WHITE, fontSize: 22),
               )
             ],
           ),
@@ -175,8 +183,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
   }
 
-
-  Widget button(){
+  Widget button() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -184,9 +191,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 20),
         //width: MediaQuery.of(context).size.width,
         child: InkWell(
-          onTap: (){
+          onTap: () {
             //print(date);
-            if(formKey.currentState.validate()){
+            email = email.trim();
+            if (formKey.currentState.validate()) {
               formKey.currentState.save();
               sendEmail();
             }
@@ -195,7 +203,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: Image.asset("assets/moreScreenImages/header_bg.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/header_bg.png",
                   height: 50,
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width,
@@ -205,10 +214,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 child: Text(
                   SUBMIT,
                   style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: WHITE,
-                      fontSize: 18
-                  ),
+                      fontWeight: FontWeight.w500, color: WHITE, fontSize: 18),
                 ),
               )
             ],
@@ -218,30 +224,28 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
   }
 
-
-  sendEmail() async{
+  sendEmail() async {
     processingDialog(PLEASE_WAIT_WHILE_PROCESSING);
-    final response = await get(Uri.parse("$SERVER_ADDRESS/api/forgotpassword?type=${widget.id}&email=$email"))
-    .catchError((e){
+    final response = await get(Uri.parse(
+            "$SERVER_ADDRESS/api/forgotpassword?type=${widget.id}&email=${email}"))
+        .catchError((e) {
       messageDialog(ERROR, e.toString());
     });
     print(response.request);
     print(response.body);
     final jsonResponse = jsonDecode(response.body);
-    if(response.statusCode == 200 && jsonResponse['success'] == 1){
-
+    if (response.statusCode == 200 && jsonResponse['success'] == 1) {
       messageDialog(SUCCESSFUL, jsonResponse['msg']);
-    }else{
-
+    } else {
       messageDialog(SUCCESSFUL, jsonResponse['msg']);
     }
   }
 
-  processingDialog(message){
+  processingDialog(message) {
     return showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
             title: Text(LOADING),
             content: Row(
@@ -250,52 +254,62 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 CircularProgressIndicator(
                   strokeWidth: 2,
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
-                  child: Text(message,style: TextStyle(color: LIGHT_GREY_TEXT, fontSize: 14),),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: LIGHT_GREY_TEXT, fontSize: 14),
+                  ),
                 )
               ],
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-            ),),
+            title: Text(
+              s1,
+              style: GoogleFonts.comfortaa(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),)
+                Text(
+                  s2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: () async{
+                onPressed: () async {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
                 color: Theme.of(context).primaryColor,
-                child: Text(OK,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color: BLACK,
-                ),),
+                child: Text(
+                  OK,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: BLACK,
+                  ),
+                ),
               ),
             ],
           );
-        }
-    );
+        });
   }
-
-
 }
