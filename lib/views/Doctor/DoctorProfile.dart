@@ -13,9 +13,11 @@ import 'package:book_appointment/views/Doctor/DoctorProfileSteps/StepThreeDetail
 import 'package:book_appointment/views/Doctor/DoctorTabScreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+
 //import 'package:facebook_audience_network/ad/ad_native.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 //import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,8 +33,7 @@ class DoctorProfile extends StatefulWidget {
   _DoctorProfileState createState() => _DoctorProfileState();
 }
 
-class _DoctorProfileState extends State<DoctorProfile>{
-
+class _DoctorProfileState extends State<DoctorProfile> {
   int index = 0;
   DoctorProfileDetails doctorProfileDetails;
   DoctorScheduleDetails doctorScheduleDetails;
@@ -52,10 +53,10 @@ class _DoctorProfileState extends State<DoctorProfile>{
 
   List<MyData> myData = [];
 
-
-  fetchDoctorSchedule() async{
-    final response = await get(Uri.parse("$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=$doctorId"));
-    if(response.statusCode == 200){
+  fetchDoctorSchedule() async {
+    final response = await get(
+        Uri.parse("$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=$doctorId"));
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       setState(() {
         doctorScheduleDetails = DoctorScheduleDetails.fromJson(jsonResponse);
@@ -64,41 +65,53 @@ class _DoctorProfileState extends State<DoctorProfile>{
     }
   }
 
-  fetchDoctorProfileDetails() async{
+  fetchDoctorProfileDetails() async {
     print("REQUEST URL : $SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId");
-    final response = await get(Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
-    .catchError((e){
+    final response = await get(
+            Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
+        .catchError((e) {
       setState(() {
         isErrorInLoading = true;
       });
       messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
     });
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       //print(jsonResponse);
-      print(departmentList.toString()+"kiii");
+      print(departmentList.toString() + "kiii");
       setState(() {
         doctorProfileDetails = DoctorProfileDetails.fromJson(jsonResponse);
         nameController.text = name = doctorProfileDetails.data.name;
         phoneController.text = phone = doctorProfileDetails.data.phoneno;
-        print("DEPARTMENT NAME " + doctorProfileDetails.data.departmentName.toString());
-        selectedValue =doctorProfileDetails.data.departmentName == null || doctorProfileDetails.data.departmentName.length == 0?null:doctorProfileDetails.data.departmentName;
+        print("DEPARTMENT NAME " +
+            doctorProfileDetails.data.departmentName.toString());
+        selectedValue = doctorProfileDetails.data.departmentName == null ||
+                doctorProfileDetails.data.departmentName.length == 0
+            ? null
+            : doctorProfileDetails.data.departmentName;
         print("DEPARTMENT NAME " + selectedValue);
-        print("\n\n\n\n"+doctorProfileDetails.data.name);
-        worktimeController.text = workingTime = doctorProfileDetails.data.workingTime ?? "";
-        feeController.text = consultationFee = doctorProfileDetails.data.consultationFee ?? "";
-        aboutUsController.text = aboutUs = doctorProfileDetails.data.aboutus ?? "";
-        serviceController.text = service = doctorProfileDetails.data.services ?? "";
-        healthcareController.text = healthcare = doctorProfileDetails.data.healthcare ?? "";
-        facebookController.text = facebook = doctorProfileDetails.data.facebookUrl ?? "";
-        twitterController.text = twitter = doctorProfileDetails.data.twitterUrl ?? "";
-        passController.text = password = doctorProfileDetails.data.password ?? "";
-        if(doctorProfileDetails.data.lat != null) {
-          _center = LatLng(
-              double.parse(doctorProfileDetails.data.lat),
+        print("\n\n\n\n" + doctorProfileDetails.data.name);
+        worktimeController.text =
+            workingTime = doctorProfileDetails.data.workingTime ?? "";
+        feeController.text =
+            consultationFee = doctorProfileDetails.data.consultationFee ?? "";
+        aboutUsController.text =
+            aboutUs = doctorProfileDetails.data.aboutus ?? "";
+        serviceController.text =
+            service = doctorProfileDetails.data.services ?? "";
+        healthcareController.text =
+            healthcare = doctorProfileDetails.data.healthcare ?? "";
+        facebookController.text =
+            facebook = doctorProfileDetails.data.facebookUrl ?? "";
+        twitterController.text =
+            twitter = doctorProfileDetails.data.twitterUrl ?? "";
+        passController.text =
+            password = doctorProfileDetails.data.password ?? "";
+        if (doctorProfileDetails.data.lat != null) {
+          _center = LatLng(double.parse(doctorProfileDetails.data.lat),
               double.parse(doctorProfileDetails.data.lon));
           locateMarker(_center, true);
-        }else{
+        } else {
           _getLocationStart();
         }
 
@@ -113,11 +126,11 @@ class _DoctorProfileState extends State<DoctorProfile>{
     super.initState();
     getSpecialities();
     getLocation = _getLocationStart();
-    SharedPreferences.getInstance().then((pref){
+    SharedPreferences.getInstance().then((pref) {
       setState(() {
         doctorId = pref.getString("userId");
       });
-    }).then((value){
+    }).then((value) {
       future = fetchDoctorProfileDetails();
       future2 = fetchDoctorSchedule();
     });
@@ -125,156 +138,171 @@ class _DoctorProfileState extends State<DoctorProfile>{
 
   Future<bool> _onWillPopScope() async {
     bool x;
-    if(index > 0){
+    if (index > 0) {
       setState(() {
         index = index - 1;
         x = false;
       });
-    }
-    else {
+    } else {
       x = true;
     }
-      return x;
+    return x;
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: WillPopScope(
-          onWillPop: _onWillPopScope,
-          child: Scaffold(
-            appBar: AppBar(
-              flexibleSpace: header(),
-              leading: Container(),
-            ),
-            body: Stack(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: index >= 0
-                                      ? AMBER
-                                      : Theme.of(context).primaryColorLight
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          Expanded(
-                            child: Container(
-                              height: 6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: index >= 1
-                                      ? AMBER
-                                      : Theme.of(context).primaryColorDark.withOpacity(0.2),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          Expanded(
-                            child: Container(
-                              height: 6,
-                              decoration: BoxDecoration(
+      child: WillPopScope(
+        onWillPop: _onWillPopScope,
+        child: Scaffold(
+          appBar: AppBar(
+            flexibleSpace: header(),
+            leading: Container(),
+          ),
+          body: Stack(
+            children: [
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 6,
+                            decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(3),
-                                color: index >= 2
+                                color: index >= 0
                                     ? AMBER
-                                    : Theme.of(context).primaryColorDark.withOpacity(0.2),
-                              ),
+                                    : Theme.of(context).primaryColorLight),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 6,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: index >= 1
+                                  ? AMBER
+                                  : Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.2),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    isErrorInLoading ? Container(
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.search_off_rounded,
-                              size: 100,
-                              color: LIGHT_GREY_TEXT,
-                            ),
-                            SizedBox(height: 20,),
-                            Text(
-                              UNABLE_TO_LOAD_DATA_FORM_SERVER,
-                            )
-                          ],
                         ),
-                      ),
-                    ) : FutureBuilder(
-                      future: future,
-                      builder: (context, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.waiting || future == null || future2 == null){
-                          return Container(
-                            height: MediaQuery.of(context).size.height - 170,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 6,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: index >= 2
+                                  ? AMBER
+                                  : Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.2),
                             ),
-                          );
-                        }
-
-                        // else if(snapshot.hasError){
-                        //   return Center(
-                        //     child: Icon(Icons.error, color:  Colors.red, size: 40,),
-                        //   );
-                        // }
-
-                        else if(snapshot.connectionState == ConnectionState.done){
-                          return Expanded(
-                            child: Stack(
-                              children: [
-                                Visibility(
-                                    visible: index >= 0 ? true : false,
-                                    child: stepOne()),
-                                Visibility(
-                                    visible: index >= 1 ? true : false,
-                                    child: stepTwo()),
-                                Visibility(
-                                    visible: index >= 2 ? true : false,
-                                    child: stepThree()),
-
-                              ],
-                              //physics: NeverScrollableScrollPhysics(),
-                            ),
-                          );
-                        }else {
-                          return Container(
-                            height: MediaQuery.of(context).size.height - 170,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            ),
-                          );
-                        }
-                      }
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                button(),
-              ],
-            ),
+                  ),
+                  isErrorInLoading
+                      ? Container(
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_off_rounded,
+                                  size: 100,
+                                  color: LIGHT_GREY_TEXT,
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  UNABLE_TO_LOAD_DATA_FORM_SERVER,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : FutureBuilder(
+                          future: future,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting ||
+                                future == null ||
+                                future2 == null) {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height - 170,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            // else if(snapshot.hasError){
+                            //   return Center(
+                            //     child: Icon(Icons.error, color:  Colors.red, size: 40,),
+                            //   );
+                            // }
+
+                            else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Expanded(
+                                child: Stack(
+                                  children: [
+                                    Visibility(
+                                        visible: index >= 0 ? true : false,
+                                        child: stepOne()),
+                                    Visibility(
+                                        visible: index >= 1 ? true : false,
+                                        child: stepTwo()),
+                                    Visibility(
+                                        visible: index >= 2 ? true : false,
+                                        child: stepThree()),
+                                  ],
+                                  //physics: NeverScrollableScrollPhysics(),
+                                ),
+                              );
+                            } else {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height - 170,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            }
+                          }),
+                ],
+              ),
+              button(),
+            ],
           ),
         ),
+      ),
     );
   }
 
-  Widget header(){
+  Widget header() {
     return Stack(
       children: [
-        Image.asset("assets/moreScreenImages/header_bg.png",
+        Image.asset(
+          "assets/moreScreenImages/header_bg.png",
           height: 60,
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width,
@@ -283,21 +311,30 @@ class _DoctorProfileState extends State<DoctorProfile>{
           height: 60,
           child: Row(
             children: [
-              index > 0 ? SizedBox(width: 15,) : Container(),
-              index > 0 ? InkWell(
-                onTap: (){
-                  _onWillPopScope();
-                },
-                child: Image.asset("assets/moreScreenImages/back.png",
-                  height: 25,
-                  width: 22,
-                ),
-              ) : Container(),
-              SizedBox(width: 10,),
-              Text(
-                  PROFILE,
-                  style: Theme.of(context).textTheme.headline5.apply(color: Theme.of(context).backgroundColor, fontWeightDelta: 5)
-              )
+              index > 0
+                  ? SizedBox(
+                      width: 15,
+                    )
+                  : Container(),
+              index > 0
+                  ? InkWell(
+                      onTap: () {
+                        _onWillPopScope();
+                      },
+                      child: Image.asset(
+                        "assets/moreScreenImages/back.png",
+                        height: 25,
+                        width: 22,
+                      ),
+                    )
+                  : Container(),
+              SizedBox(
+                width: 10,
+              ),
+              Text(PROFILE,
+                  style: Theme.of(context).textTheme.headline5.apply(
+                      color: Theme.of(context).backgroundColor,
+                      fontWeightDelta: 5))
             ],
           ),
         ),
@@ -305,7 +342,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
     );
   }
 
-  Widget button(){
+  Widget button() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -314,70 +351,68 @@ class _DoctorProfileState extends State<DoctorProfile>{
         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
         //width: MediaQuery.of(context).size.width,
         child: InkWell(
-          onTap: (){
-            if(index == 0){
-              if(name.isEmpty){
+          onTap: () {
+            if (index == 0) {
+              if (name.isEmpty) {
                 setState(() {
                   isNameError = true;
                 });
-              }else if(phone.length < 10){
+              } else if (phone.length < 10) {
                 setState(() {
                   isPhoneError = true;
                 });
-              }else if(password.isEmpty){
+              } else if (password.isEmpty) {
                 setState(() {
                   isPassError = true;
                 });
-              }else if(selectedValue == null){
+              } else if (selectedValue == null) {
                 setState(() {
                   isDepartmentError = true;
                 });
-              }else if(workingTime.isEmpty){
+              } else if (workingTime.isEmpty) {
                 setState(() {
                   isWorkingTimeError = true;
                 });
-              }else if(consultationFee.isEmpty){
+              } else if (consultationFee.isEmpty) {
                 setState(() {
                   isFeeError = true;
                 });
-              }else if(aboutUs.isEmpty){
+              } else if (aboutUs.isEmpty) {
                 setState(() {
                   isAboutUsError = true;
                 });
-              }else if(service.isEmpty){
+              } else if (service.isEmpty) {
                 setState(() {
                   isServiceError = true;
                 });
-              }else if(healthcare.isEmpty){
+              } else if (healthcare.isEmpty) {
                 setState(() {
                   isHealthCareError = true;
                 });
-              }else if(facebook.isEmpty){
+              } else if (facebook.isEmpty) {
                 setState(() {
                   isFacebookError = true;
                 });
-              }else if(twitter.isEmpty){
+              } else if (twitter.isEmpty) {
                 setState(() {
                   isTwitterError = true;
                 });
-              }else{
+              } else {
                 setState(() {
                   index = index + 1;
                 });
               }
-            }
-            else if(index == 1){
-              if(textEditingController.text.isEmpty){
+            } else if (index == 1) {
+              if (textEditingController.text.isEmpty) {
                 setState(() {
                   isAddressError = true;
                 });
-              }else{
+              } else {
                 setState(() {
-                      index = index + 1;
-                    });
+                  index = index + 1;
+                });
               }
-            }
-            else if(index == 2){
+            } else if (index == 2) {
               uploadData();
             }
 
@@ -391,7 +426,8 @@ class _DoctorProfileState extends State<DoctorProfile>{
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: Image.asset("assets/moreScreenImages/header_bg.png",
+                child: Image.asset(
+                  "assets/moreScreenImages/header_bg.png",
                   height: 50,
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width,
@@ -399,12 +435,9 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               Center(
                 child: Text(
-                  index == 2 ? UPDATE :NEXT,
+                  index == 2 ? UPDATE : NEXT,
                   style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: WHITE,
-                      fontSize: 18
-                  ),
+                      fontWeight: FontWeight.w500, color: WHITE, fontSize: 18),
                 ),
               )
             ],
@@ -458,7 +491,8 @@ class _DoctorProfileState extends State<DoctorProfile>{
   String base64image;
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 30);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 30);
 
     setState(() {
       if (pickedFile != null) {
@@ -472,19 +506,19 @@ class _DoctorProfileState extends State<DoctorProfile>{
       }
     });
   }
-  
-  getSpecialities() async{
+
+  getSpecialities() async {
     final response = await get(Uri.parse("$SERVER_ADDRESS/api/getspeciality"));
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       specialityClass = SpecialityClass.fromJson(jsonResponse);
-      for(int i=0;i<specialityClass.data.length;i++){
+      for (int i = 0; i < specialityClass.data.length; i++) {
         departmentList.add(specialityClass.data[i].name);
       }
     }
   }
 
-  Widget stepOne(){
+  Widget stepOne() {
     return Scaffold(
       backgroundColor: LIGHT_GREY_SCREEN_BACKGROUND,
       body: Container(
@@ -492,7 +526,9 @@ class _DoctorProfileState extends State<DoctorProfile>{
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -504,7 +540,9 @@ class _DoctorProfileState extends State<DoctorProfile>{
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(70),
                           border: Border.all(
-                            color: Theme.of(context).primaryColorDark.withOpacity(0.4),
+                            color: Theme.of(context)
+                                .primaryColorDark
+                                .withOpacity(0.4),
                             width: 1,
                           ),
                         ),
@@ -513,23 +551,37 @@ class _DoctorProfileState extends State<DoctorProfile>{
                             borderRadius: BorderRadius.circular(65),
                             child: _image != null
                                 ? Image.file(
-                              _image,
-                              height: 130,
-                              width: 130,
-                              fit: BoxFit.cover,
-                            )
+                                    _image,
+                                    height: 130,
+                                    width: 130,
+                                    fit: BoxFit.cover,
+                                  )
                                 : CachedNetworkImage(
-                              imageUrl: doctorProfileDetails.data.image,
-                              height: 130,
-                              width: 130,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Transform.scale(
-                                  scale: 3.1,
-                                  child: Icon(Icons.account_circle, color: Theme.of(context).primaryColorDark.withOpacity(0.3), size: 50,)),
-                              errorWidget: (context, url, error) => Transform.scale(
-                                  scale: 3.1,
-                                  child: Icon(Icons.account_circle, color: Theme.of(context).primaryColorDark.withOpacity(0.3), size: 50,)),
-                            ),
+                                    imageUrl: doctorProfileDetails.data.image,
+                                    height: 130,
+                                    width: 130,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        Transform.scale(
+                                            scale: 3.1,
+                                            child: Icon(
+                                              Icons.account_circle,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark
+                                                  .withOpacity(0.3),
+                                              size: 50,
+                                            )),
+                                    errorWidget: (context, url, error) =>
+                                        Transform.scale(
+                                            scale: 3.1,
+                                            child: Icon(
+                                              Icons.account_circle,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark
+                                                  .withOpacity(0.3),
+                                              size: 50,
+                                            )),
+                                  ),
                           ),
                         ),
                       ),
@@ -537,18 +589,17 @@ class _DoctorProfileState extends State<DoctorProfile>{
                         height: 135,
                         width: 135,
                         child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: InkWell(
-                            onTap: (){
-                              getImage();
-                            },
-                            child: Image.asset(
-                              "assets/homeScreenImages/edit.png",
-                              height: 35,
-                              width: 35,
-                            ),
-                          )
-                        ),
+                            alignment: Alignment.bottomRight,
+                            child: InkWell(
+                              onTap: () {
+                                getImage();
+                              },
+                              child: Image.asset(
+                                "assets/homeScreenImages/edit.png",
+                                height: 35,
+                                width: 35,
+                              ),
+                            )),
                       ),
                     ],
                   ),
@@ -562,7 +613,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
     );
   }
 
-  formToEdit(){
+  formToEdit() {
     return Container(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -576,15 +627,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isNameError ? ENTER_NAME : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 name = val;
                 isNameError = false;
@@ -604,15 +652,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isPhoneError ? ENTER_MOBILE_NUMBER : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 phone = val;
                 isPhoneError = false;
@@ -632,15 +677,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isPassError ? ENTER_PASSWORD : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 password = val;
                 isPassError = false;
@@ -654,41 +696,46 @@ class _DoctorProfileState extends State<DoctorProfile>{
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             //width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              border: Border.all(color: !isDepartmentError
-                  ? Theme.of(context).primaryColorDark.withOpacity(0.4)
-                  : Colors.red.shade700,
+              border: Border.all(
+                  color: !isDepartmentError
+                      ? Theme.of(context).primaryColorDark.withOpacity(0.4)
+                      : Colors.red.shade700,
                   width: 1),
             ),
-            child: departmentList == null ? Container() : DropdownButton(
-              hint: Text(SELECT_DEPARTMENT),
-              items: departmentList.map((x){
-                return DropdownMenuItem(
-                  child: Text(x,style: TextStyle(fontSize: 14),),
-                  value: x,
-                );
-              }).toList(),
-              value: selectedValue,
-              onTap: (){
-                setState(() {
-                  isDepartmentError = false;
-                });
-              },
-              onChanged: (val){
-                setState(() {
-                  selectedValue = val;
-                });
-                print("DEPARTMENT NAME " + selectedValue);
-
-              },
-              isExpanded: true,
-              underline: Container(),
-              //value: selectedValue.isEmpty ? DENTIST : selectedValue,
-              icon: Image.asset(
-                "assets/homeScreenImages/dropdown.png",
-                height: 15,
-                width: 15,
-              ),
-            ),
+            child: departmentList == null
+                ? Container()
+                : DropdownButton(
+                    hint: Text(SELECT_DEPARTMENT),
+                    items: departmentList.map((x) {
+                      return DropdownMenuItem(
+                        child: Text(
+                          x,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        value: x,
+                      );
+                    }).toList(),
+                    value: selectedValue,
+                    onTap: () {
+                      setState(() {
+                        isDepartmentError = false;
+                      });
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        selectedValue = val;
+                      });
+                      print("DEPARTMENT NAME " + selectedValue);
+                    },
+                    isExpanded: true,
+                    underline: Container(),
+                    //value: selectedValue.isEmpty ? DENTIST : selectedValue,
+                    icon: Image.asset(
+                      "assets/homeScreenImages/dropdown.png",
+                      height: 15,
+                      width: 15,
+                    ),
+                  ),
           ),
           SizedBox(
             height: 3,
@@ -703,15 +750,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isWorkingTimeError ? ENTER_WORKING_TIME : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 workingTime = val;
                 isWorkingTimeError = false;
@@ -734,21 +778,19 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isFeeError ? THIS_FIELD_IS_REQUIRED : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 consultationFee = val;
                 isFeeError = false;
               });
             },
           ),
+
           ///-------------
 
           SizedBox(
@@ -766,15 +808,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isAboutUsError ? ENTER_ABOUT_US : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 aboutUs = val;
                 isAboutUsError = false;
@@ -796,15 +835,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isServiceError ? ENTER_SERVICES : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 service = val;
                 isServiceError = false;
@@ -826,15 +862,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
               errorText: isHealthCareError ? THIS_FIELD_IS_REQUIRED : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 healthcare = val;
                 isHealthCareError = false;
@@ -855,15 +888,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
-               errorText: isFacebookError ? THIS_FIELD_IS_REQUIRED : null,
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
+              errorText: isFacebookError ? THIS_FIELD_IS_REQUIRED : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 facebook = val;
                 isFacebookError = false;
@@ -884,15 +914,12 @@ class _DoctorProfileState extends State<DoctorProfile>{
               ),
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-              ),
-               errorText: isTwitterError ? THIS_FIELD_IS_REQUIRED : null,
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark)),
+              errorText: isTwitterError ? THIS_FIELD_IS_REQUIRED : null,
             ),
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14
-            ),
-            onChanged: (val){
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            onChanged: (val) {
               setState(() {
                 twitter = val;
                 isTwitterError = false;
@@ -900,13 +927,13 @@ class _DoctorProfileState extends State<DoctorProfile>{
               });
             },
           ),
-          SizedBox(height: 100,),
+          SizedBox(
+            height: 100,
+          ),
         ],
       ),
     );
   }
-
-
 
   // step two ---------------------------------------
 
@@ -921,7 +948,7 @@ class _DoctorProfileState extends State<DoctorProfile>{
     mapController = controller;
   }
 
-  locateMarker(LatLng latLng, bool x) async{
+  locateMarker(LatLng latLng, bool x) async {
     final marker = Marker(
       markerId: MarkerId("curr_loc"),
       position: latLng,
@@ -933,29 +960,27 @@ class _DoctorProfileState extends State<DoctorProfile>{
     print("\n\n\n\n Marker: ${_markers["Current Location"]}\n\n");
 
     //if(x) {
-      final coordinates = new Coordinates(latLng.latitude, latLng.longitude);
-      print(coordinates);
-      Geocoder.local.findAddressesFromCoordinates(
-          coordinates).then((value) {
-        var first = value.first;
-        print(value);
-        print("\n\n\n\n${first.addressLine}\n\n\n");
-        setState(() {
-          isAddressError = false;
-          // addressLine = first.addressLine;
-          textEditingController.text = first.addressLine;
-          // mapController.(CameraUpdate.newCameraPosition(CameraPosition(target: _center,zoom: 15 ))).catchError((e){
-          //   Toast.show(e, context);
-          // });
-        });
-      }).catchError((e){
-        print("Error" +e.toString());
+    final coordinates = new Coordinates(latLng.latitude, latLng.longitude);
+    print(coordinates);
+    Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
+      var first = value.first;
+      print(value);
+      print("\n\n\n\n${first.addressLine}\n\n\n");
+      setState(() {
+        isAddressError = false;
+        // addressLine = first.addressLine;
+        textEditingController.text = first.addressLine;
+        // mapController.(CameraUpdate.newCameraPosition(CameraPosition(target: _center,zoom: 15 ))).catchError((e){
+        //   Toast.show(e, context);
+        // });
       });
-   // }
-
+    }).catchError((e) {
+      print("Error" + e.toString());
+    });
+    // }
   }
 
-  stepTwo(){
+  stepTwo() {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColorLight,
@@ -974,14 +999,11 @@ class _DoctorProfileState extends State<DoctorProfile>{
                   ),
                   border: UnderlineInputBorder(),
                   focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark)
-                  ),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColorDark)),
                   errorText: isAddressError ? SELECT_ADDRESS_FROM_MAP : null,
                 ),
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               ),
             ),
             Expanded(
@@ -990,16 +1012,22 @@ class _DoctorProfileState extends State<DoctorProfile>{
                 child: FutureBuilder(
                     future: getLocation,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting || future == null || future2 == null) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          future == null ||
+                          future2 == null) {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
                       } else {
                         return GoogleMap(
+                          myLocationButtonEnabled: true,
+                          myLocationEnabled: true,
+
                           onMapCreated: _onMapCreated,
                           //scrollGesturesEnabled: true,
                           initialCameraPosition: CameraPosition(
-                            target: _center ?? LatLng(40.7731125115069, -73.96187393112228),
+                            target: _center ??
+                                LatLng(40.7731125115069, -73.96187393112228),
                             zoom: 15.0,
                           ),
                           onTap: (latLang) {
@@ -1015,12 +1043,13 @@ class _DoctorProfileState extends State<DoctorProfile>{
                           markers: _markers.values.toSet(),
                         );
                       }
-                    }
-                ),
+                    }),
               ),
             ),
             //_getAdContainer(),
-            SizedBox(height: 70,),
+            SizedBox(
+              height: 70,
+            ),
           ],
         ),
       ),
@@ -1030,71 +1059,73 @@ class _DoctorProfileState extends State<DoctorProfile>{
   _getLocationStart() async {
     print('Started');
     //Toast.show("loading", context);
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((value) async{
+    Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high)
+        .then((value) async {
       setState(() {
         _center = LatLng(value.latitude, value.longitude);
         print("\n\n\n\n\nLocation loaded");
         locateMarker(_center, false);
       });
-    })
-        .catchError((e){
-      Toast.show(e.toString(), context,duration: 3);
+    }).catchError((e) {
+      Toast.show(e.toString(), context, duration: 3);
       print(e);
     });
   }
 
-
-
-
-
-
-
   // step three ---------------------------
 
-  List<int> slotsCount = [0,0,0,0,0,0,0];
-  stepThree(){
+  List<int> slotsCount = [0, 0, 0, 0, 0, 0, 0];
+
+  stepThree() {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColorLight,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10,),
-              FutureBuilder(
-                future: future2,
-                builder: (context, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting || future == null || future2 == null){
-                    return Container(
-                      height: MediaQuery.of(context).size.height - 170,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    );
-                  }else if(snapshot.connectionState == ConnectionState.done){
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 7,
-                      physics: ClampingScrollPhysics(),
-                      itemBuilder: (context, index){
-                        return MyCard(index);
-                      },
-                    );
-                  }else{
-                    return Container(
-                      height: MediaQuery.of(context).size.height - 170,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    );
-                  }
-                }
+              SizedBox(
+                height: 10,
               ),
+              FutureBuilder(
+                  future: future2,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        future == null ||
+                        future2 == null) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height - 170,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 7,
+                        physics: ClampingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return MyCard(index);
+                        },
+                      );
+                    } else {
+                      return Container(
+                        height: MediaQuery.of(context).size.height - 170,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      );
+                    }
+                  }),
               //_getAdContainer(),
-              SizedBox(height: 100,),
+              SizedBox(
+                height: 100,
+              ),
             ],
           ),
         ),
@@ -1103,8 +1134,10 @@ class _DoctorProfileState extends State<DoctorProfile>{
   }
 
   fetchSlotsCount() {
-    slotsCount = [0,0,0,0,0,0,0];
+    slotsCount = [0, 0, 0, 0, 0, 0, 0];
     for (int i = 0; i < doctorScheduleDetails.data.length; i++) {
+      final data = doctorScheduleDetails.data[i];
+      // data.getslotls[0]
       setState(() {
         if (doctorScheduleDetails.data[i].dayId == 0) {
           slotsCount[0] = slotsCount[0] + 1;
@@ -1126,7 +1159,6 @@ class _DoctorProfileState extends State<DoctorProfile>{
   }
 
   Widget MyCard(int i) {
-
     myData.add(MyData(
       avgratting: doctorProfileDetails.data.avgratting,
       departmentName: selectedValue,
@@ -1146,25 +1178,52 @@ class _DoctorProfileState extends State<DoctorProfile>{
       twitterUrl: twitter,
       consultationFee: consultationFee,
     ));
+    final day = doctorScheduleDetails.data
+        .indexWhere((element) => element.dayId == i.toString());
+    // print('////$day -------');
+    // print('////${doctorScheduleDetails.data[0].getslotls} -------');
+    bool notHaveTimes =
+        day == -1 || doctorScheduleDetails.data[day].getslotls.isEmpty;
 
+    print('------ $notHaveTimes -------');
+    // print(
+    //     '------ ${doctorScheduleDetails.data[day].getslotls.isEmpty} -------');
     return InkWell(
-      onTap: () async{
-        bool x = await Navigator.push(context, MaterialPageRoute(
-          builder: (context) => StepThreeDetailsScreen(i.toString(),myData[i],doctorId,_image == null ? null : base64image),
-        ));
-        if(x){
-          setState(() {
-            future2 = fetchDoctorSchedule();
-          });
-        }
+      onTap: () async {
+        bool x = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StepThreeDetailsScreen(i.toString(),
+                  myData[i], doctorId, _image == null ? null : base64image),
+            ));
+        print('$x after navigation to times');
+
+        setState(() {
+          future2 = fetchDoctorSchedule();
+        });
+
+        // if (x) {
+        //   setState(() {
+        //     future2 = fetchDoctorSchedule();
+        //   });
+        // }
       },
       child: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(16,5,16,5),
+        margin: EdgeInsets.fromLTRB(16, 5, 16, 5),
         decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
-            borderRadius: BorderRadius.circular(15)
-        ),
+            // color: Colors.red,
+            color: !notHaveTimes
+                ? Colors.orange
+                : Theme.of(context).backgroundColor,
+/*
+            color: day == -1
+                ? Theme.of(context).backgroundColor
+                : doctorScheduleDetails.data[day].getslotls.isNotEmpty
+                    ? Colors.orange
+                    : Theme.of(context).backgroundColor,
+*/
+            borderRadius: BorderRadius.circular(15)),
         child: Row(
           children: [
             Expanded(
@@ -1172,21 +1231,28 @@ class _DoctorProfileState extends State<DoctorProfile>{
                 children: [
                   Row(
                     children: [
-                      Image.asset(
-                        "assets/homeScreenImages/calender.png",
-                        height: 15,
-                        width: 15,
+                      Image.asset("assets/homeScreenImages/calender.png",
+                          height: 15,
+                          width: 15,
+                          color: !notHaveTimes ? Colors.white : null),
+                      SizedBox(
+                        width: 5,
                       ),
-                      SizedBox(width: 5,),
-                      Text(daysList[i],
+                      Text(
+                        daysList[i],
                         style: TextStyle(
-                            color: Theme.of(context).primaryColorDark.withOpacity(0.4),
-                            fontWeight: FontWeight.w600
-                        ),
+                            color: !notHaveTimes
+                                ? Colors.white
+                                : Theme.of(context)
+                                    .primaryColorDark
+                                    .withOpacity(0.4),
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   // Row(
                   //   children: [
                   //     SizedBox(width: 20,),
@@ -1208,33 +1274,40 @@ class _DoctorProfileState extends State<DoctorProfile>{
                       itemCount: slotsCount[i],
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemBuilder: (context, ind){
-
+                      itemBuilder: (context, ind) {
                         int length = 0;
-                        for(int k=0; k<i; k++){
+                        for (int k = 0; k < i; k++) {
                           length = length + slotsCount[k];
                         }
-                        print(length);
 
                         return Column(
                           children: [
                             Row(
                               children: [
-                                SizedBox(width: 20,),
+                                SizedBox(
+                                  width: 20,
+                                ),
                                 Image.asset(
                                   "assets/detailScreenImages/time.png",
                                   height: 13,
                                   width: 13,
                                   color: AMBER,
                                 ),
-                                SizedBox(width: 5,),
-                                Text("${doctorScheduleDetails.data[ind + length].startTime} - ${doctorScheduleDetails.data[ind+length].endTime}", style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 11,
-                                ),),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "${doctorScheduleDetails.data[ind + length].startTime} - ${doctorScheduleDetails.data[ind + length].endTime}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 11,
+                                  ),
+                                ),
                               ],
                             ),
-                            SizedBox(height: 8,),
+                            SizedBox(
+                              height: 8,
+                            ),
                           ],
                         );
                       },
@@ -1243,27 +1316,29 @@ class _DoctorProfileState extends State<DoctorProfile>{
                 ],
               ),
             ),
-            Image.asset("assets/moreScreenImages/detail_arrow.png",
+            Image.asset(
+              "assets/moreScreenImages/detail_arrow.png",
               height: 15,
               width: 15,
             ),
-            SizedBox(width: 5,)
+            SizedBox(
+              width: 5,
+            )
           ],
         ),
       ),
     );
-
   }
-
 
   bool isSuccessful = false;
 
-  dialog(){
+  dialog() {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(PROCESSING,
+            title: Text(
+              PROCESSING,
               style: GoogleFonts.poppins(),
             ),
             content: Container(
@@ -1271,81 +1346,88 @@ class _DoctorProfileState extends State<DoctorProfile>{
               child: Row(
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(width: 15,),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
-                    child: Text(PLEASE_WAIT_WHILE_SAVING_CHANGES,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12
-                      ),
+                    child: Text(
+                      PLEASE_WAIT_WHILE_SAVING_CHANGES,
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
                   )
                 ],
               ),
             ),
           );
-        }
-    );
+        });
   }
 
-  messageDialog(String s1, String s2){
+  messageDialog(String s1, String s2) {
     return showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
-            title: Text(s1,style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-            ),),
+            title: Text(
+              s1,
+              style: GoogleFonts.comfortaa(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s2,style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),)
+                Text(
+                  s2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
             actions: [
               FlatButton(
-                onPressed: (){
-                  if(isSuccessful){
+                onPressed: () {
+                  if (isSuccessful) {
                     setState(() {
                       future = fetchDoctorProfileDetails();
                       future2 = fetchDoctorSchedule();
                       index = 0;
                       Navigator.popUntil(context, (route) => route.isFirst);
-                      Navigator.pushReplacement(context,
-                        MaterialPageRoute(
-                          builder: (context) => DoctorTabsScreen()
-                        )
-                      );
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DoctorTabsScreen()));
                     });
-                  }else {
+                  } else {
                     Navigator.pop(context);
                   }
                 },
                 color: Theme.of(context).primaryColor,
-                child: Text(OK,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  color: BLACK,
-                ),),
+                child: Text(
+                  OK,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: BLACK,
+                  ),
+                ),
               ),
             ],
           );
-        }
-    );
+        });
   }
 
-  uploadData() async{
+  uploadData() async {
     int departmentId;
     setState(() {
       departmentId = 0;
     });
 
-    for(int i=0;i<departmentList.length;i++){
-      if(specialityClass.data[i].name == selectedValue){
+    for (int i = 0; i < departmentList.length; i++) {
+      if (specialityClass.data[i].name == selectedValue) {
         setState(() {
           departmentId = specialityClass.data[i].id;
-          print("DEPARTMENT NAME ${i+1}" + selectedValue);
+          print("DEPARTMENT NAME ${i + 1}" + selectedValue);
         });
         break;
       }
@@ -1357,118 +1439,89 @@ class _DoctorProfileState extends State<DoctorProfile>{
     print(facebook);
     print(twitter);
     print(base64image);
-    if(_image == null){
-      final response = await post(Uri.parse("$SERVER_ADDRESS/api/doctoreditprofile"),
-          body: {
-            "doctor_id" : doctorId,
-            "name" : name,
-            "password" :password,
-            "email" : doctorProfileDetails.data.email ?? "",
-            "consultation_fees" : consultationFee,
-            "aboutus" : aboutUs,
-            "working_time" : workingTime,
-            "address" : textEditingController.text,
-            "lat" : _center.latitude.toString(),
-            "lon" : _center.longitude.toString(),
-            "phoneno" : phone,
-            "services" : service,
-            "healthcare" : healthcare,
-            //widget.base64image == null ? "doctor_id" : widget.doctorId : "image" : widget.base64image,
-            "department_id" : departmentId.toString(),
-            "facebook_url" : facebook,
-            "twitter_url" : twitter,
-          }
-      ).catchError((e){
+    if (_image == null) {
+      final response =
+          await post(Uri.parse("$SERVER_ADDRESS/api/doctoreditprofile"), body: {
+        "doctor_id": doctorId,
+        "name": name,
+        "password": password,
+        "email": doctorProfileDetails.data.email ?? "",
+        "consultation_fees": consultationFee,
+        "aboutus": aboutUs,
+        "working_time": workingTime,
+        "address": textEditingController.text,
+        "lat": _center.latitude.toString(),
+        "lon": _center.longitude.toString(),
+        "phoneno": phone,
+        "services": service,
+        "healthcare": healthcare,
+        //widget.base64image == null ? "doctor_id" : widget.doctorId : "image" : widget.base64image,
+        "department_id": departmentId.toString(),
+        "facebook_url": facebook,
+        "twitter_url": twitter,
+      }).catchError((e) {
         Navigator.pop(context);
         messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
         print(e);
       });
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
-        if(jsonResponse['success'] == "1"){
+        if (jsonResponse['success'] == "1") {
           Navigator.pop(context);
           setState(() {
             isSuccessful = true;
             messageDialog(SUCCESSFUL, PROFILE_UPDATED_SUCCESSFULLY);
           });
-        }else{
+        } else {
           Navigator.pop(context);
           messageDialog(ERROR, jsonResponse['register']);
         }
       }
-    }
-    else{
-
+    } else {
       Dio d = Dio();
 
       var formData = dio.FormData.fromMap({
-        "doctor_id" : doctorId,
-        "name" : name,
-        "password" :password,
-        "email" : doctorProfileDetails.data.email ?? "",
-        "aboutus" : aboutUs,
-        "consultation_fees" : consultationFee,
-        "working_time" : workingTime,
-        "address" : textEditingController.text,
-        "lat" : _center.latitude.toString(),
-        "lon" : _center.longitude.toString(),
-        "phoneno" : phone,
-        "services" : service,
-        "healthcare" : healthcare,
-        "department_id" : departmentId.toString(),
-        "facebook_url" : facebook,
-        "twitter_url" : twitter,
-        'image' : await dio.MultipartFile.fromFile(_image.path, filename: 'image.jpg'),
+        "doctor_id": doctorId,
+        "name": name,
+        "password": password,
+        "email": doctorProfileDetails.data.email ?? "",
+        "aboutus": aboutUs,
+        "consultation_fees": consultationFee,
+        "working_time": workingTime,
+        "address": textEditingController.text,
+        "lat": _center.latitude.toString(),
+        "lon": _center.longitude.toString(),
+        "phoneno": phone,
+        "services": service,
+        "healthcare": healthcare,
+        "department_id": departmentId.toString(),
+        "facebook_url": facebook,
+        "twitter_url": twitter,
+        'image': await dio.MultipartFile.fromFile(_image.path,
+            filename: 'image.jpg'),
       });
-      var response = await d.post("$SERVER_ADDRESS/api/doctoreditprofile", data: formData).catchError((e){
+      var response = await d
+          .post("$SERVER_ADDRESS/api/doctoreditprofile", data: formData)
+          .catchError((e) {
         Navigator.pop(context);
         messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
         print(e);
       });
 
-      // final response = await post("$SERVER_ADDRESS/api/doctoreditprofile",
-      //     body: {
-      //       "doctor_id" : doctorId,
-      //       "name" : name,
-      //       "password" :password,
-      //       "email" : doctorProfileDetails.data.email ?? "",
-      //       "aboutus" : aboutUs,
-      //       "working_time" : workingTime,
-      //       "address" : textEditingController.text,
-      //       "lat" : _center.latitude.toString(),
-      //       "lon" : _center.longitude.toString(),
-      //       "phoneno" : phone,
-      //       "services" : service,
-      //       "healthcare" : healthcare,
-      //       "image" : base64image,
-      //       "department_id" : departmentId.toString(),
-      //       "facebook_url" : facebook,
-      //       "twitter_url" : twitter,
-      //     }
-      // ).catchError((e){
-      //   Navigator.pop(context);
-      //   messageDialog(ERROR, UNABLE_TO_LOAD_DATA_FORM_SERVER);
-      //   print(e);
-      // });
-
-      if(response.statusCode == 200){
-        //final jsonResponse = jsonDecode(response.body);
+      if (response.statusCode == 200) {
         print(response.data);
-        if(response.data['success'] == "1"){
+        if (response.data['success'] == "1") {
           Navigator.pop(context);
           setState(() {
             isSuccessful = true;
             messageDialog(SUCCESSFUL, PROFILE_UPDATED_SUCCESSFULLY);
           });
-        }else{
+        } else {
           Navigator.pop(context);
           messageDialog(ERROR, response.data['register']);
         }
       }
     }
   }
-
-
-
 }

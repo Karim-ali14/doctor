@@ -32,8 +32,8 @@ class _DoctorAllAppointmentsState extends State<DoctorAllAppointments> {
   ScrollController _scrollController = ScrollController();
 
   fetchPastAppointments() async {
-    final response =
-        await get(Uri.parse("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$userId"));
+    final response = await get(
+        Uri.parse("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$userId"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == "1") {

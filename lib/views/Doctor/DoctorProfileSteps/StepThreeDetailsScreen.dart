@@ -155,8 +155,8 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
   }
 
   fetchDoctorSlots() async {
-    final response = await get(
-           Uri.parse( "$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=${widget.doctorId}"))
+    final response = await get(Uri.parse(
+            "$SERVER_ADDRESS/api/getdoctorschedule?doctor_id=${widget.doctorId}"))
         .catchError((e) {
       setState(() {
         isErrorInLoading = true;
@@ -232,7 +232,7 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
     //}
   }
 
-  Future<bool> _onWillPopScope() async {
+  Future<bool> _onWillPopScope(BuildContext context) async {
     Navigator.pop(context, areChangesMade);
     return false;
   }
@@ -240,7 +240,7 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPopScope,
+      onWillPop: () => _onWillPopScope(context),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Theme.of(context).primaryColorLight,
@@ -873,6 +873,7 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
     print(widget.myData.twitterUrl);
     print(widget.base64image);
     if (widget.base64image == null) {
+      print('widget.base64image == null');
       final response =
           await post(Uri.parse("$SERVER_ADDRESS/api/doctoreditprofile"), body: {
         "doctor_id": widget.doctorId,
@@ -899,6 +900,8 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
         print(e);
       });
       if (response.statusCode == 200) {
+        print(response.body);
+
         final jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
         if (jsonResponse['success'] == "1") {

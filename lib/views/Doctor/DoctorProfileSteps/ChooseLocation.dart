@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ChooseLocation extends StatefulWidget {
-
   LatLng latLng;
 
   ChooseLocation(this.latLng);
@@ -13,7 +11,6 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
-
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
 
@@ -21,7 +18,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
     mapController = controller;
   }
 
-  locateMarker() async{
+  locateMarker() async {
     final marker = Marker(
       markerId: MarkerId("curr_loc"),
       position: LatLng(widget.latLng.latitude, widget.latLng.longitude),
@@ -43,6 +40,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
+        myLocationButtonEnabled: true,
+        myLocationEnabled: true,
         onMapCreated: _onMapCreated,
         mapToolbarEnabled: false,
         zoomControlsEnabled: false,
@@ -50,7 +49,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
           target: widget.latLng,
           zoom: 16.0,
         ),
-        onTap: (latLang){
+        onTap: (latLang) {
           //Toast.show(latLang.toString(), context,duration: 2);
           setState(() {
             //_getLocation(latLang);
@@ -62,5 +61,4 @@ class _ChooseLocationState extends State<ChooseLocation> {
       ),
     );
   }
-
 }
