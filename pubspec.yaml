@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # flutter pub run flutter_launcher_icons:main
 # flutter pub run change_app_package_name:main bmsc.ws.gis.store
 
-version: 9.0.0+11
+version: 9.0.0+12
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
