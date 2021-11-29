@@ -38,7 +38,6 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
   selectTime(i, bool isStartTime) async {
     FocusScope.of(context).unfocus();
     if (isStartTime && textEditingControllerStartTime[i].text.isNotEmpty) {
-      print(textEditingControllerStartTime[i].text);
       _time = TimeOfDay(
           hour: int.parse(textEditingControllerStartTime[i].text.split(":")[0]),
           minute:
@@ -423,13 +422,16 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
                               ),
                             ],
                             onTap: () {
+                              print('onTap');
+
                               selectTime(i, true);
                             },
                             onChanged: (val) {
+                              print('%%%%%%%%%');
+                              print(val.toString()+'&&&&&&&&&');
                               setState(() {
                                 startTime[i] = val;
                                 isError[i] = false;
-                                print(startTime[i]);
                                 selectedvValue[i] = null;
                               });
                             },
@@ -437,6 +439,8 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
                           InkWell(
                               onTap: () {
                                 selectTime(i, true);
+                                print('sss');
+
                               },
                               child: Container(
                                 height: 50,
@@ -866,12 +870,6 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
   }
 
   uploadData(x) async {
-    dialog();
-    print("\n\n\nLoading...       ${widget.doctorId}");
-    print(widget.myData.healthcare);
-    print(widget.myData.facebookUrl);
-    print(widget.myData.twitterUrl);
-    print(widget.base64image);
     if (widget.base64image == null) {
       print('widget.base64image == null');
       final response =

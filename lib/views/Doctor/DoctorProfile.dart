@@ -1196,7 +1196,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
               builder: (context) => StepThreeDetailsScreen(i.toString(),
                   myData[i], doctorId, _image == null ? null : base64image),
             ));
-        print('$x after navigation to times');
 
         setState(() {
           future2 = fetchDoctorSchedule();
