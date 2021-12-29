@@ -1,6 +1,7 @@
 import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
 import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -57,55 +58,69 @@ void main() async {
   //   print(event);
   // });
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MaterialApp(
-    home: SplashScreen(),
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      timePickerTheme: TimePickerThemeData(
-        dayPeriodTextColor: Colors.cyanAccent.shade700,
-        //hourMinuteColor: Colors.cyanAccent.shade700,
-        helpTextStyle: GoogleFonts.poppins(),
-      ),
-      accentColor: Colors.cyanAccent.shade700,
-      primaryColor: Colors.cyanAccent,
-      backgroundColor: Colors.white,
-      primaryColorDark: Colors.grey.shade700,
-      primaryColorLight: Colors.grey.shade200,
-      //highlightColor: Colors.amber.shade700,
-      textTheme: TextTheme(
-        headline1: GoogleFonts.poppins(),
-        headline2: GoogleFonts.poppins(),
-        headline3: GoogleFonts.poppins(),
-        headline4: GoogleFonts.poppins(),
-        headline5: GoogleFonts.poppins(),
-        headline6: GoogleFonts.poppins(),
-        subtitle1: GoogleFonts.poppins(),
-        subtitle2: GoogleFonts.poppins(),
-        caption: GoogleFonts.poppins(
-          fontSize: 10,
-        ),
-        bodyText1:
-            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
-        bodyText2:
-            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
-        button: GoogleFonts.poppins(),
-      ),
-    ),
-    localizationsDelegates: [
-      // ... app-specific localization delegate[s] here
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
-    supportedLocales: [
-      const Locale('en', ''), // English, no country code
-      const Locale('he', ''), // Hebrew, no country code
-      const Locale('ar', ''), // Hebrew, no country code
-      const Locale.fromSubtags(
-          languageCode: 'zh'), // Chinese *See Advanced Locales below*
-      // ... other locales the app supports
-    ],
-  ));
+  runApp(MyMaterialApp());
 }
+
+
+
+class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      locale: Locale('en'),
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        timePickerTheme: TimePickerThemeData(
+          dayPeriodTextColor: Colors.cyanAccent.shade700,
+          //hourMinuteColor: Colors.cyanAccent.shade700,
+          helpTextStyle: GoogleFonts.poppins(),
+        ),
+        accentColor: Colors.cyanAccent.shade700,
+        primaryColor: Colors.cyanAccent,
+        backgroundColor: Colors.white,
+        primaryColorDark: Colors.grey.shade700,
+        primaryColorLight: Colors.grey.shade200,
+        //highlightColor: Colors.amber.shade700,
+        textTheme: TextTheme(
+          headline1: GoogleFonts.poppins(),
+          headline2: GoogleFonts.poppins(),
+          headline3: GoogleFonts.poppins(),
+          headline4: GoogleFonts.poppins(),
+          headline5: GoogleFonts.poppins(),
+          headline6: GoogleFonts.poppins(),
+          subtitle1: GoogleFonts.poppins(),
+          subtitle2: GoogleFonts.poppins(),
+          caption: GoogleFonts.poppins(
+            fontSize: 10,
+          ),
+          bodyText1:
+          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+          bodyText2:
+          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
+          button: GoogleFonts.poppins(),
+        ),
+      ),
+      localizationsDelegates: [
+        GlobalCupertinoLocalizations.delegate,
+        // ... app-specific localization delegate[s] here
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English, no country code
+        const Locale('he', ''), // Hebrew, no country code
+        const Locale('ar', ''), // Hebrew, no country code
+        const Locale.fromSubtags(
+            languageCode: 'zh'), // Chinese *See Advanced Locales below*
+        // ... other locales the app supports
+      ],
+    );
+  }
+}
+
 
 /*
 class TabsScreen extends StatefulWidget {
