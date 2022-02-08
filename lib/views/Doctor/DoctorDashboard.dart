@@ -4,6 +4,7 @@ import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/modals/DoctorAppointmentClass.dart';
 import 'package:book_appointment/modals/DoctorPastAppointmentsClass.dart';
+import 'package:book_appointment/notification_handler.dart';
 import 'package:book_appointment/views/Doctor/DoctorAllAppointments.dart';
 import 'package:book_appointment/views/Doctor/DoctorAppointmentDetails.dart';
 import 'package:book_appointment/views/Doctor/DoctorProfileWithRating.dart';
@@ -33,8 +34,8 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
   bool isErrorInLoading = false;
 
   fetchDoctorAppointment() async {
-    final response =
-        await get(Uri.parse("$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$doctorId"));
+    final response = await get(Uri.parse(
+        "$SERVER_ADDRESS/api/doctoruappointment?doctor_id=$doctorId"));
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == "1") {
@@ -52,9 +53,9 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
   }
 
   fetchDoctorDetails() async {
-    final response =
-        await get(Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
-            .catchError((e) {
+    final response = await get(
+            Uri.parse("$SERVER_ADDRESS/api/doctordetail?doctor_id=$doctorId"))
+        .catchError((e) {
       setState(() {
         isErrorInLoading = true;
       });
@@ -90,6 +91,9 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    print('GG');
+    // NotificationHandler().init().then((value) => print(value));
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: LIGHT_GREY_SCREEN_BACKGROUND,
@@ -545,10 +549,8 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
                     style: Theme.of(context).textTheme.caption),
 */
 
-                Text(
-                    list[index].date.toString(),
+                Text(list[index].date.toString(),
                     style: Theme.of(context).textTheme.caption),
-
                 Text(list[index].slot,
                     style: Theme.of(context)
                         .textTheme
