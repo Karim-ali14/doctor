@@ -1,6 +1,7 @@
 import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
 import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'en.dart';
+import 'firebase_options.dart';
 
 // const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
 const String SERVER_ADDRESS = "http://doctor.drayman.co";
@@ -50,7 +52,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPreferences = await SharedPreferences.getInstance();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(/*options: DefaultFirebaseOptions.currentPlatform*/);
 
   // nativeAdController.setNonPersonalizedAds(true);
   // nativeAdController.setTestDeviceIds(["0B43A6DF92B4C06E3D9DBF00BA6DA410"]);
@@ -61,6 +63,27 @@ void main() async {
   runApp(MyMaterialApp());
 }
 
+Future<void> x() async {
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
+}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  // await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
 
 
 class MyMaterialApp extends StatelessWidget {
@@ -68,6 +91,18 @@ class MyMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    x();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+
+print('SS');
     return MaterialApp(
       locale: Locale('en'),
       home: SplashScreen(),
