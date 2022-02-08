@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 #flutter pub run flutter_native_splash:create
 #flutter pub run flutter_app_name
 # flutter pub run flutter_launcher_icons:main
-# flutter pub run change_app_package_name:main bmsc.ws.gis.store
+# flutter pub run change_app_package_name:main bmsc.ws.doctor.app
 
 version: 9.0.0+14
 
@@ -112,9 +112,9 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   screenshots: ^2.1.1
 flutter_app_name:
-  name: "Patient App"
+  name: "Doctor App"
 flutter_launcher_name:
-  name: "Patient App"
+  name: "Doctor App"
 
 flutter_native_splash:
   background_image: "assets/splash.png"

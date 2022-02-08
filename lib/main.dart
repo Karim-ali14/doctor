@@ -1,4 +1,8 @@
-import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
+import 'dart:math';
+
+import 'package:book_appointment/utils/firebase_notification_handler.dart';
+import 'package:book_appointment/utils/local_notification_handler.dart';
+import 'package:book_appointment/utils/notification_handler.dart';
 import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,11 +10,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 //import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'en.dart';
 import 'firebase_options.dart';
 
 // const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
@@ -48,11 +52,13 @@ String TOKENIZATION_KEY = "sandbox_bn2rby52_8x2htw9jqj88wsyf";
 String LANGUAGE_FILE = "en";
 
 SharedPreferences sharedPreferences;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MyNotificationHandler().x();
   sharedPreferences = await SharedPreferences.getInstance();
 
-  await Firebase.initializeApp(/*options: DefaultFirebaseOptions.currentPlatform*/);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // nativeAdController.setNonPersonalizedAds(true);
   // nativeAdController.setTestDeviceIds(["0B43A6DF92B4C06E3D9DBF00BA6DA410"]);
@@ -63,46 +69,27 @@ void main() async {
   runApp(MyMaterialApp());
 }
 
-Future<void> x() async {
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
-  print('User granted permission: ${settings.authorizationStatus}');
-
-}
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  // await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
-}
-
-
 class MyMaterialApp extends StatelessWidget {
   const MyMaterialApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    x();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseNotificationHandler.subscribeToAllTopic();
+
+    /* FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
 
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
       }
-    });
+    });*/
 
-print('SS');
+/*
+    LocalNotificationHandler.init().then((value) {
+    });
+*/
+    print('SS');
     return MaterialApp(
       locale: Locale('en'),
       home: SplashScreen(),
@@ -132,9 +119,9 @@ print('SS');
             fontSize: 10,
           ),
           bodyText1:
-          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+              GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
           bodyText2:
-          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
+              GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
           button: GoogleFonts.poppins(),
         ),
       ),
@@ -155,7 +142,6 @@ print('SS');
     );
   }
 }
-
 
 /*
 class TabsScreen extends StatefulWidget {

@@ -4,12 +4,11 @@ import 'package:book_appointment/en.dart';
 import 'package:book_appointment/main.dart';
 import 'package:book_appointment/modals/DoctorAppointmentClass.dart';
 import 'package:book_appointment/modals/DoctorPastAppointmentsClass.dart';
-import 'package:book_appointment/notification_handler.dart';
+import 'package:book_appointment/utils/local_notification_handler.dart';
 import 'package:book_appointment/views/Doctor/DoctorAllAppointments.dart';
 import 'package:book_appointment/views/Doctor/DoctorAppointmentDetails.dart';
 import 'package:book_appointment/views/Doctor/DoctorProfileWithRating.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-//import 'package:facebook_audience_network/ad/ad_native.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_native_admob/flutter_native_admob.dart';
@@ -91,9 +90,6 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    print('GG');
-    // NotificationHandler().init().then((value) => print(value));
-
     return SafeArea(
         child: Scaffold(
       backgroundColor: LIGHT_GREY_SCREEN_BACKGROUND,

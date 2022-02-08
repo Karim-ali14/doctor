@@ -1,4 +1,4 @@
-import 'package:book_appointment/notification_handler.dart';
+import 'package:book_appointment/utils/local_notification_handler.dart';
 import 'package:book_appointment/views/core/widgets/retry_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
