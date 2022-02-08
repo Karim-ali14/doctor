@@ -1,6 +1,8 @@
 import 'package:book_appointment/views/Doctor/loginAsDoctor.dart';
 import 'package:book_appointment/views/Doctor/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'en.dart';
+import 'firebase_options.dart';
 
 // const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
 const String SERVER_ADDRESS = "http://doctor.drayman.co";
@@ -49,7 +52,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPreferences = await SharedPreferences.getInstance();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(/*options: DefaultFirebaseOptions.currentPlatform*/);
 
   // nativeAdController.setNonPersonalizedAds(true);
   // nativeAdController.setTestDeviceIds(["0B43A6DF92B4C06E3D9DBF00BA6DA410"]);
@@ -57,55 +60,102 @@ void main() async {
   //   print(event);
   // });
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MaterialApp(
-    home: SplashScreen(),
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      timePickerTheme: TimePickerThemeData(
-        dayPeriodTextColor: Colors.cyanAccent.shade700,
-        //hourMinuteColor: Colors.cyanAccent.shade700,
-        helpTextStyle: GoogleFonts.poppins(),
-      ),
-      accentColor: Colors.cyanAccent.shade700,
-      primaryColor: Colors.cyanAccent,
-      backgroundColor: Colors.white,
-      primaryColorDark: Colors.grey.shade700,
-      primaryColorLight: Colors.grey.shade200,
-      //highlightColor: Colors.amber.shade700,
-      textTheme: TextTheme(
-        headline1: GoogleFonts.poppins(),
-        headline2: GoogleFonts.poppins(),
-        headline3: GoogleFonts.poppins(),
-        headline4: GoogleFonts.poppins(),
-        headline5: GoogleFonts.poppins(),
-        headline6: GoogleFonts.poppins(),
-        subtitle1: GoogleFonts.poppins(),
-        subtitle2: GoogleFonts.poppins(),
-        caption: GoogleFonts.poppins(
-          fontSize: 10,
-        ),
-        bodyText1:
-            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
-        bodyText2:
-            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
-        button: GoogleFonts.poppins(),
-      ),
-    ),
-    localizationsDelegates: [
-      // ... app-specific localization delegate[s] here
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
-    supportedLocales: [
-      const Locale('en', ''), // English, no country code
-      const Locale('he', ''), // Hebrew, no country code
-      const Locale('ar', ''), // Hebrew, no country code
-      const Locale.fromSubtags(
-          languageCode: 'zh'), // Chinese *See Advanced Locales below*
-      // ... other locales the app supports
-    ],
-  ));
+  runApp(MyMaterialApp());
 }
+
+Future<void> x() async {
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
+}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  // await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
+
+class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    x();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+
+print('SS');
+    return MaterialApp(
+      locale: Locale('en'),
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        timePickerTheme: TimePickerThemeData(
+          dayPeriodTextColor: Colors.cyanAccent.shade700,
+          //hourMinuteColor: Colors.cyanAccent.shade700,
+          helpTextStyle: GoogleFonts.poppins(),
+        ),
+        accentColor: Colors.cyanAccent.shade700,
+        primaryColor: Colors.cyanAccent,
+        backgroundColor: Colors.white,
+        primaryColorDark: Colors.grey.shade700,
+        primaryColorLight: Colors.grey.shade200,
+        //highlightColor: Colors.amber.shade700,
+        textTheme: TextTheme(
+          headline1: GoogleFonts.poppins(),
+          headline2: GoogleFonts.poppins(),
+          headline3: GoogleFonts.poppins(),
+          headline4: GoogleFonts.poppins(),
+          headline5: GoogleFonts.poppins(),
+          headline6: GoogleFonts.poppins(),
+          subtitle1: GoogleFonts.poppins(),
+          subtitle2: GoogleFonts.poppins(),
+          caption: GoogleFonts.poppins(
+            fontSize: 10,
+          ),
+          bodyText1:
+          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+          bodyText2:
+          GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w300),
+          button: GoogleFonts.poppins(),
+        ),
+      ),
+      localizationsDelegates: [
+        GlobalCupertinoLocalizations.delegate,
+        // ... app-specific localization delegate[s] here
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English, no country code
+        const Locale('he', ''), // Hebrew, no country code
+        const Locale('ar', ''), // Hebrew, no country code
+        const Locale.fromSubtags(
+            languageCode: 'zh'), // Chinese *See Advanced Locales below*
+        // ... other locales the app supports
+      ],
+    );
+  }
+}
+
 
 /*
 class TabsScreen extends StatefulWidget {
