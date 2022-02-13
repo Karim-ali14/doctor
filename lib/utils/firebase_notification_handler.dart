@@ -52,7 +52,7 @@ class FirebaseNotificationHandler {
 
   void handleNotifications() {
     handleForegroundMessage(onForegroundNotificationHandler);
-    FirebaseMessaging.onBackgroundMessage(onBackgroundNotificationHandler);
+    // FirebaseMessaging.onBackgroundMessage(onBackgroundNotificationHandler);
   }
 }
 /*
