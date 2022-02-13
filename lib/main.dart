@@ -55,10 +55,10 @@ SharedPreferences sharedPreferences;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MyNotificationHandler().x();
   sharedPreferences = await SharedPreferences.getInstance();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  MyNotificationHandler().x();
 
   // nativeAdController.setNonPersonalizedAds(true);
   // nativeAdController.setTestDeviceIds(["0B43A6DF92B4C06E3D9DBF00BA6DA410"]);
