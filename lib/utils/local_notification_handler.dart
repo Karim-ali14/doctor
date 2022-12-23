@@ -12,7 +12,7 @@ class LocalNotificationHandler {
         android: AndroidInitializationSettings(
           'app_icon',
         ),
-        iOS: IOSInitializationSettings(),
+        iOS: DarwinInitializationSettings(),
       ),
     );
   }

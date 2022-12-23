@@ -1030,11 +1030,13 @@ class _StepThreeDetailsScreenState extends State<StepThreeDetailsScreen> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                color: Theme.of(context).primaryColor,
+                style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).primaryColor
+                ),
                 child: Text(
                   OK,
                   style: GoogleFonts.poppins(

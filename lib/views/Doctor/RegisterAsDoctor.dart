@@ -481,11 +481,11 @@ class _RegisterAsDoctorState extends State<RegisterAsDoctor> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                },
-                color: Theme.of(context).accentColor,
+                }, style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).accentColor),
                 child: Text(
                   OK,
                   style: GoogleFonts.poppins(

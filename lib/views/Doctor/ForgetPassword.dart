@@ -294,12 +294,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                color: Theme.of(context).primaryColor,
+                style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).primaryColor
+                ),
                 child: Text(
                   OK,
                   style: GoogleFonts.poppins(

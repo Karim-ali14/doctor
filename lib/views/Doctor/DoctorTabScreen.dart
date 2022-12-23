@@ -174,13 +174,15 @@ class _DoctorTabsScreenState extends State<DoctorTabsScreen> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () async{
                   await SharedPreferences.getInstance().then((pref){
                     pref.setBool("isLoggedInAsDoctor", false);
                   });
                 },
-                color: Theme.of(context).primaryColor,
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor
+                ),
                 child: Text(YES,style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: BLACK,

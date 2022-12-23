@@ -158,7 +158,7 @@ class _DoctorProfileStepTwoState extends State<DoctorProfileStepTwo> {
         //locateMarker(_center);
       });
     }).catchError((e) {
-      Toast.show(e.toString(), context, duration: 3);
+      Toast.show(e.toString(), duration: 3);
       print(e);
     });
   }

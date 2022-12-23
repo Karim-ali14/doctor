@@ -48,7 +48,7 @@ class _LogOutScreenState extends State<LogOutScreen> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () async{
                   await SharedPreferences.getInstance().then((pref){
                     pref.setBool("isLoggedInAsDoctor", false);
@@ -63,8 +63,8 @@ class _LogOutScreenState extends State<LogOutScreen> {
                   Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context) => LoginAsDoctor(),
                   ));
-                },
-                color: Theme.of(context).accentColor,
+                }, style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).accentColor),
                 child: Text(YES,style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: BLACK,

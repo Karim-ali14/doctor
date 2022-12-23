@@ -1068,7 +1068,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
         locateMarker(_center, false);
       });
     }).catchError((e) {
-      Toast.show(e.toString(), context, duration: 3);
+      Toast.show(e.toString(), duration: 3);
       print(e);
     });
   }
@@ -1385,7 +1385,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   if (isSuccessful) {
                     setState(() {
@@ -1402,7 +1402,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     Navigator.pop(context);
                   }
                 },
-                color: Theme.of(context).primaryColor,
+                style:  TextButton.styleFrom(foregroundColor: Theme.of(context).primaryColor),
                 child: Text(
                   OK,
                   style: GoogleFonts.poppins(

@@ -689,7 +689,7 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   if (isCompleteError) {
                     Navigator.pop(context);
@@ -699,7 +699,9 @@ class _DoctorAppointmentDetailsState extends State<DoctorAppointmentDetails> {
                     });
                   }
                 },
-                color: Theme.of(context).primaryColor,
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                ),
                 child: Text(
                   OK,
                   style: GoogleFonts.poppins(
