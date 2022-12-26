@@ -18,7 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 // const String SERVER_ADDRESS = "http://192.168.2.114/Doctor_App/codecanyon-NjBilg7t-doctor-finder-appointment-booking-with-timeslot-app/UploadingContentV2/PHPScript/PHPSCRIPT";
-const String SERVER_ADDRESS = "http://doctor.drayman.co";
+const String SERVER_ADDRESS = "http://ahmed-zidan.drayman.co";
 
 const LANGUAGE = "en";
 int PHONE_NUMBER_LENGTH = 10;
