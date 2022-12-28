@@ -55,6 +55,6 @@ class DefaultFirebaseOptions {
     projectId: 'doctor-b0cd1',
     storageBucket: 'doctor-b0cd1.appspot.com',
     iosClientId: '398546324578-2fbt81hqohn6h3seov34fiidb6qfjc16.apps.googleusercontent.com',
-    iosBundleId: 'bmsc.ws.doctor.app',
+    iosBundleId: 'zedan.bmsc.ws',
   );
 }

@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="bmsc.ws.doctor.app">
+    package="zedan.bmsc.ws">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
-        android:label="Doctor App"
+        android:label="د/أحمد زيدان"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/round_launcher"
         >
