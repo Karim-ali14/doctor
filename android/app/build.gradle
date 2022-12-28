@@ -66,6 +66,7 @@ android {
     }
     buildTypes {
         release {
+            crunchPngs false // Disable PNG crunching. This is done in the Flutter build.
             signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
         }
