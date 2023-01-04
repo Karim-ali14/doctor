@@ -5,6 +5,7 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -68,7 +69,6 @@ android {
         release {
             crunchPngs false // Disable PNG crunching. This is done in the Flutter build.
             signingConfig signingConfigs.release
-            signingConfig signingConfigs.debug
         }
     }
 }

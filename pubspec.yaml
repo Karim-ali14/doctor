@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # flutter pub run flutter_launcher_icons:main
 # flutter pub run change_app_package_name:main zedan.bmsc.ws
 
-version: 9.0.0+14
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
